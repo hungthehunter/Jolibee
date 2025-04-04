@@ -1,0 +1,11 @@
+## Nodejs express 
+# Install dependency
+- npm i express dotenv bcrypt jsonwebtoken body-parser cors
+- npm install mongoose@6.2.2
+
+// JWT and bcrypt password for login
+- npm install bcrypt
+- npm install jsonwebtoken
+- npm install cookie-parser
+- npm install nodemailer
+

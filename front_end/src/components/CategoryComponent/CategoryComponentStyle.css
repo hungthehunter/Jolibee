@@ -1,0 +1,32 @@
+
+.category-row{
+    position: relative;
+    left: 0;
+    display:flex;
+    padding:  10px 0px;
+    flex-direction: row;
+    justify-content: space-between;
+    gap:50px;
+    align-items: center;
+    background-color: #f0f0f0;
+    margin-bottom: 20px;
+}
+
+.category-item{
+    display: inline-block;
+    align-items: center;
+    text-align: center;
+}
+
+.category-item p{
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+.category-item img{
+    width: 100px;
+    height: inherit;
+    min-height:97px;
+    max-height:100px;
+}

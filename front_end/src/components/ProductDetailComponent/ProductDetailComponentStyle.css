@@ -1,0 +1,79 @@
+
+/* Định dạng modal */
+.product-modal {
+    padding: 0;
+    border-radius: 12px;
+  }
+
+.product-modal-header{
+  width: 100%;
+}
+  
+  /* Tạo layout chia cột */
+  .modal-content-wrapper {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  /* Phần chứa hình ảnh */
+  .modal-image-container {
+    padding: 0;
+    background: #f8f8f8; /* Màu nền nhẹ để phân biệt với phần nội dung */
+    border-radius: 12px 0 0 12px;
+    overflow: hidden;
+  }
+  
+  .modal-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px 0 0 12px;
+  }
+  
+  /* Phần chứa nội dung */
+  .modal-info {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .modal-title {
+    font-size: 22px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .modal-description {
+    color: #666;
+    font-size: 14px;
+  }
+  
+  .modal-price {
+    font-size: 20px;
+    font-weight: bold;
+    color: #e60000;
+  }
+  
+  .modal-order-btn {
+    width: 100%;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  
+  /* Responsive cho màn hình nhỏ */
+  @media (max-width: 768px) {
+    .modal-content-wrapper {
+      flex-direction: column;
+    }
+  
+    .modal-image-container {
+      border-radius: 12px 12px 0 0;
+    }
+  
+    .modal-image {
+      border-radius: 12px 12px 0 0;
+    }
+  }
+  
