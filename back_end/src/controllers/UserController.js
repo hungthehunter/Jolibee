@@ -91,7 +91,7 @@ const loginUser = async (req, res) => {
     res.cookie("refresh_token", refresh_token, {
       httpOnly: true,
       secure: false,
-      samesite: "strict",
+      samesite: "none",
     });
     return res.status(200).json(newResponse);
   } catch (error) {

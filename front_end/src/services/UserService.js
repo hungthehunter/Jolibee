@@ -39,14 +39,21 @@ export const getDetailUser = async (id, access_token) => {
 };
 
 export const refreshToken = async () => {
-  const res = await axios.post(
-    `${import.meta.env.VITE_API_URL_BACKEND}/user/refresh-token`,
-    {
-      withCredentials: true,
-    }
-  );
-  return res.data;
+  try {
+    const res = await axios.post(
+      `${import.meta.env.VITE_API_URL_BACKEND}/user/refresh-token`,
+      {}, // nếu không cần body
+      {
+        withCredentials: true,
+      }
+    );
+    return res.data;
+  } catch (err) {
+    console.error("Refresh token error:", err);
+    return null;
+  }
 };
+
 
 export const logoutUser = async () => {
   const res = await axios.post(
