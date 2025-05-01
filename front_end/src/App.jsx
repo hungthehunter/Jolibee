@@ -5,7 +5,7 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import DefaultComponent from "./components/DefaultComponent/DefaultComponent";
-import { updateUser } from "./redux/slices/userSlice";
+import { resetUser, updateUser } from "./redux/slices/userSlice";
 import { routes } from "./routes/index";
 import * as UserService from "./services/UserService";
 import { isJsonString } from "./utils";
@@ -25,9 +25,10 @@ function App() {
 
   // Handle decoded token and extract user data
   const handleDecoded = () => {
-    let storageData = localStorage.getItem("access_token");
+    let storageData =
+      user?.access_token || localStorage.getItem("access_token");
     let decoded = {};
-    if (storageData && isJsonString(storageData)) {
+    if (storageData && isJsonString(storageData) && !user?.access_token) {
       storageData = JSON.parse(storageData);
       decoded = jwtDecode(storageData); // Decode the token
     }
@@ -39,27 +40,17 @@ function App() {
     async (config) => {
       const currentTime = new Date();
       const { decoded } = handleDecoded();
-      console.log("Decoded Token: ", decoded);  // Log decoded token to verify
-
-      // Check if token is expired
+      let storageRefreshToken = localStorage.getItem("refresh_token");
+      const refreshToken = JSON.parse(storageRefreshToken);
+      const decodedRefreshToken = jwtDecode(refreshToken);
       if (decoded?.exp < currentTime.getTime() / 1000) {
-        console.log("Token expired, refreshing...");
-
-        // Call refreshToken if expired
-        const data = await UserService.refreshToken();
-
-        // Log the new token to verify refresh
-        console.log("New Access Token: ", data?.access_token);
-
-        // Update the config headers with the new token
-        config.headers["token"] = `Bearer ${data?.access_token}`;
-        
-        // Optionally, update the localStorage with the new token
-        localStorage.setItem("access_token", JSON.stringify(data?.access_token));
-      } else {
-        console.log("Token is valid, using current token.");
-      }
-
+        if (decodedRefreshToken?.exp > currentTime.getTime() / 1000) {
+          const data = await UserService.refreshToken(refreshToken);
+          config.headers["token"] = `Bearer ${data?.access_token}`;
+        }else{
+          dispatch(resetUser())
+        }
+      } 
       return config;
     },
     function (error) {
@@ -68,9 +59,11 @@ function App() {
   );
 
   // Get detailed user information
-  const handleGetDetailUser = async (id, access_token) => {
-    const res = await UserService.getDetailUser(id, access_token);
-    dispatch(updateUser({ ...res?.data, access_token: access_token }));
+  const handleGetDetailUser = async (id, token) => {
+    let storageRefreshToken = localStorage.getItem("refresh_token");
+    const refreshToken = JSON.parse(storageRefreshToken);
+    const res = await UserService.getDetailUser(id, token);
+    dispatch(updateUser({ ...res?.data, access_token: token , refreshToken: refreshToken}));
     setIsPending(false);
   };
 

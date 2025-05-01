@@ -38,13 +38,13 @@ export const getDetailUser = async (id, access_token) => {
   return res.data;
 };
 
-export const refreshToken = async () => {
+export const refreshToken = async (refreshToken) => {
   try {
     const res = await axios.post(
       `${import.meta.env.VITE_API_URL_BACKEND}/user/refresh-token`,
       {}, // nếu không cần body
       {
-        withCredentials: true,
+        headers: `Bearer ${refreshToken}`,
       }
     );
     return res.data;
@@ -53,7 +53,6 @@ export const refreshToken = async () => {
     return null;
   }
 };
-
 
 export const logoutUser = async () => {
   const res = await axios.post(
@@ -103,7 +102,7 @@ export const deleteManyUser = async (ids, access_token) => {
   try {
     const response = await axios.post(
       `${import.meta.env.VITE_API_URL_BACKEND}/user/delete-many`,
-      {ids},
+      { ids },
       {
         headers: {
           token: `Bearer ${access_token}`,

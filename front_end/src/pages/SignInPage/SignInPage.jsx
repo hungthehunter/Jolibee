@@ -41,7 +41,7 @@ function SignInPage() {
 
   useEffect(() => {
     if (isSuccess) {
-      const { status, access_token } = data || {};
+      const { status, access_token , refresh_token } = data || {};
       if (status === "ERR") {
         Message.toastError(
           "Login failed, please check password and email again!"
@@ -49,6 +49,8 @@ function SignInPage() {
       } else if (access_token) {
         Message.toastSuccess("Login successfully");
         localStorage.setItem("access_token", JSON.stringify(access_token));
+        localStorage.setItem("refresh_token", JSON.stringify(refresh_token));
+
         const decoded = jwtDecode(access_token);
         if (decoded?.id) {
           handleGetDetailUser(decoded?.id, access_token);
@@ -66,8 +68,10 @@ function SignInPage() {
   }, [isSuccess, isError, data]);
 
   const handleGetDetailUser = async (id, token) => {
+    const storage = localStorage.getItem('refresh_token');
+    const refreshToken = JSON.parse(storage);
     const res = await UserService.getDetailUser(id, token);
-    dispatch(updateUser({ ...res?.data, access_token: token }));
+    dispatch(updateUser({ ...res?.data, access_token: token, refreshToken }));
   };
 
   const handleNavigateSignUp = () => {
