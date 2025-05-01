@@ -1,4 +1,4 @@
-import AdminPage from "../pages/AdminPage/Adminpage";
+import AdminPage from "../pages/AdminPage/AdminPage";
 import HomePage from "../pages/HomePage/HomePage";
 import MenuPage from "../pages/MenuPage/MenuPage";
 import MyOrderPage from "../pages/MyOrderPage/MyOrderPage";
