@@ -22,28 +22,45 @@ const authMiddleware = (req,res,next) =>{
   })
 }
 
-const authUserMiddleware = (req,res,next) =>{
-    const token = req.headers.token.split(' ')[1];
+const jwt = require('jsonwebtoken');
+
+const authUserMiddleware = (req, res, next) => {
+    const authHeader = req.headers.token;
+    console.log('authHeader in backend:',authHeader)
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({
+            status: 'ERR',
+            message: 'No token provided or token format is invalid',
+        });
+    }
+
+
+
+    const token = authHeader.split(' ')[1];
     const userId = req.params.id;
- 
-    jwt.verify(token,process.env.ACCESS_TOKEN,(err,user)=>{
-        if(err){
-            return res.status(404).json({
+console.log('token in backend:',token)
+    jwt.verify(token, process.env.ACCESS_TOKEN, (err, user) => {
+        if (err) {
+            return res.status(403).json({
                 status: 'ERR',
-                message: 'Invalid Token'
-            })
+                message: 'Invalid Token',
+            });
         }
-        if(user?.isAdmin || user?.id === userId){
-            next()
-        }else{
-            console.log('authMiddleware: ',userId)
-            return res.status(404).json({
+
+        if (user?.isAdmin || user?.id === userId) {
+            next();
+        } else {
+            return res.status(403).json({
                 status: 'ERR',
-                message: 'The authenticated user is not an admin or the userId is not the same as the token id',
-            })
+                message: 'User is not authorized',
+            });
         }
-    })
-}
+    });
+};
+
+module.exports = authUserMiddleware;
+
 
 module.exports = {
     authMiddleware,
