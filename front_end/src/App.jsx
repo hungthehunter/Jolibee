@@ -1,14 +1,14 @@
-import { jwtDecode } from "jwt-decode";
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import DefaultComponent from "./components/DefaultComponent/DefaultComponent";
-import { resetUser, updateUser } from "./redux/slices/userSlice";
-import { routes } from "./routes/index";
-import * as UserService from "./services/UserService";
-import { isJsonString } from "./utils";
+import { jwtDecode } from 'jwt-decode';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import DefaultComponent from './components/DefaultComponent/DefaultComponent';
+import { resetUser, updateUser } from './redux/slices/userSlice';
+import { routes } from './routes/index';
+import * as UserService from './services/UserService';
+import { isJsonString } from './utils';
 
 function App() {
   const dispatch = useDispatch();
@@ -26,7 +26,7 @@ function App() {
   // Handle decoded token and extract user data
   const handleDecoded = () => {
     let storageData =
-      user?.access_token || localStorage.getItem("access_token");
+      user?.access_token || localStorage.getItem('access_token');
     let decoded = {};
     if (storageData && isJsonString(storageData) && !user?.access_token) {
       storageData = JSON.parse(storageData);
@@ -40,13 +40,13 @@ function App() {
     async (config) => {
       const currentTime = new Date();
       const { decoded } = handleDecoded();
-      let storageRefreshToken = localStorage.getItem("refresh_token");
+      let storageRefreshToken = localStorage.getItem('refresh_token');
       const refreshToken = JSON.parse(storageRefreshToken);
       const decodedRefreshToken = jwtDecode(refreshToken);
       if (decoded?.exp < currentTime.getTime() / 1000) {
         if (decodedRefreshToken?.exp > currentTime.getTime() / 1000) {
           const data = await UserService.refreshToken(refreshToken);
-          config.headers["token"] = `Bearer ${data?.access_token}`;
+          config.headers['token'] = `Bearer ${data?.access_token}`;
         }else{
           dispatch(resetUser())
         }
@@ -60,7 +60,7 @@ function App() {
 
   // Get detailed user information
   const handleGetDetailUser = async (id, token) => {
-    let storageRefreshToken = localStorage.getItem("refresh_token");
+    let storageRefreshToken = localStorage.getItem('refresh_token');
     const refreshToken = JSON.parse(storageRefreshToken);
     const res = await UserService.getDetailUser(id, token);
     dispatch(updateUser({ ...res?.data, access_token: token , refreshToken: refreshToken}));
@@ -94,7 +94,7 @@ function App() {
       </Router>
 
       <ToastContainer
-        position="top-right"
+        position='top-right'
         autoClose={3000}
         hideProgressBar={false}
         newestOnTop={false}

@@ -12,7 +12,6 @@ const port = process.env.PORT || 3000;
 
 app.use(cors({
   origin: ['https://fantastyburger.vercel.app', 'http://localhost:3000'],
-  credentials: true,
 }));
 
 
