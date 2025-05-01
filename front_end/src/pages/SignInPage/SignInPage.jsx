@@ -48,12 +48,8 @@ function SignInPage() {
         );
       } else if (access_token) {
         Message.toastSuccess("Login successfully");
-        const token = JSON.parse(
-          localStorage.getItem("access_token") || "null"
-        );
-        console.log("Current token:", token);
+        const token = localStorage.getItem("access_token");
         const decoded = jwtDecode(token);
-        console.log("Decoded token:", decoded);
         if (decoded?.id) {
           handleGetDetailUser(decoded?.id, access_token);
         }
