@@ -17,6 +17,8 @@ const ModalProductComponent = ({ show, handleClose }) => {
     discount: "",
   });
 
+  const [newTypeInput, setNewTypeInput] = useState(""); // State để lưu giá trị nhập loại mới
+
   const { data: types = [], isPending: loadingTypes } = useQuery({
     queryKey: ["productTypes"],
     queryFn: ProductService.getAllType,
@@ -67,9 +69,22 @@ const ModalProductComponent = ({ show, handleClose }) => {
       setImageFile(file);
       setImagePreview(URL.createObjectURL(file));
     } else if (name === "type" && value === "__add_new__") {
-      setFormData((prev) => ({ ...prev, type: "__add_new__" }));
+      // Khi chọn "+ Add new type", chỉ cập nhật trạng thái mới mà không thay đổi formData.type ngay
+      setFormData((prev) => ({ ...prev, type: value }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
+    }
+  };
+
+  const handleNewTypeInput = (e) => {
+    setNewTypeInput(e.target.value); // Cập nhật giá trị nhập vào loại mới
+  };
+
+  const handleNewTypeChange = () => {
+    // Khi người dùng nhập và nhấn Save New Type, cập nhật formData.type với giá trị đã nhập
+    if (newTypeInput.trim()) {
+      setFormData((prev) => ({ ...prev, type: newTypeInput.trim() }));
+      setNewTypeInput(""); // Reset ô input khi đã nhập xong
     }
   };
 
@@ -86,10 +101,11 @@ const ModalProductComponent = ({ show, handleClose }) => {
       countInStock: "",
       rating: "",
       description: "",
-      discount:"",
+      discount: "",
     });
     setImageFile(null);
     setImagePreview("");
+    setNewTypeInput(""); // Reset giá trị loại mới
   };
 
   return (
@@ -105,23 +121,18 @@ const ModalProductComponent = ({ show, handleClose }) => {
       </Modal.Header>
       <Modal.Body>
         <Form>
-          {[
-            "name",
-            "price",
-            "countInStock",
-            "rating",
-            "description",
-            "discount",
+          {[ 
+            "name", "price", "countInStock", "rating", "description", "discount"
           ].map((field) => (
             <Form.Group className="mb-3" key={field}>
               <Form.Label>{field}</Form.Label>
-                <InputForm
-                  type={field === "description" ? "textarea" : "text"}
-                  name={field}
-                  value={formData[field]}
-                  onChange={handleChange}
-                  placeholder={`Enter ${field}`}
-                />
+              <InputForm
+                type={field === "description" ? "textarea" : "text"}
+                name={field}
+                value={formData[field]}
+                onChange={handleChange}
+                placeholder={`Enter ${field}`}
+              />
             </Form.Group>
           ))}
           <Form.Group className="mb-3">
@@ -140,15 +151,23 @@ const ModalProductComponent = ({ show, handleClose }) => {
               ))}
               <option value="__add_new__">+ Add new type</option>
             </Form.Select>
+
             {formData.type === "__add_new__" && (
-              <Form.Control
-                className="mt-2"
-                type="text"
-                placeholder="Enter new type"
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, type: e.target.value }))
-                }
-              />
+              <div>
+                <Form.Control
+                  className="mt-2"
+                  type="text"
+                  placeholder="Enter new type"
+                  value={newTypeInput} // Lưu giá trị nhập vào
+                  onChange={handleNewTypeInput} // Cập nhật giá trị nhập vào
+                />
+                <Button
+                  variant="outline-primary"
+                  onClick={handleNewTypeChange} // Cập nhật giá trị nhập vào vào formData.type
+                >
+                  Save New Type
+                </Button>
+              </div>
             )}
           </Form.Group>
 

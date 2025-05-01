@@ -193,24 +193,25 @@ const getDetailUser = (id) => {
     try {
       const user = await User.findOne({ _id: id });
       if (user === null) {
-        resolve({
+        return resolve({
           status: "ERR",
           message: "The user is not defined",
         });
       }
-      resolve({
+      return resolve({
         status: "OK",
         message: "Get user successfully",
         data: user,
       });
     } catch (error) {
-      reject({
+      return reject({
         status: "ERR",
         message: error.message,
       });
     }
   });
 };
+
 
 const deleteMany = ({ ids }) => {
   return new Promise(async (resolve, reject) => {

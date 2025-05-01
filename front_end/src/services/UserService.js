@@ -27,7 +27,6 @@ export const createUser = async (data) => {
 };
 
 export const getDetailUser = async (id, access_token) => {
-  console.log('access_token trong getDetailUser',access_token)
   const res = await axiosJWT.get(
     `${import.meta.env.VITE_API_URL_BACKEND}/user/get-details/${id}`,
     {
@@ -40,7 +39,6 @@ export const getDetailUser = async (id, access_token) => {
 };
 
 export const refreshToken = async (refreshToken) => {
-  console.log('refreshToken',refreshToken)
   try {
     const res = await axios.post(
       `${import.meta.env.VITE_API_URL_BACKEND}/user/refresh-token`,

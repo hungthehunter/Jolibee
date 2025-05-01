@@ -22,8 +22,6 @@ const authMiddleware = (req,res,next) =>{
   })
 }
 
-const jwt = require('jsonwebtoken');
-
 const authUserMiddleware = (req, res, next) => {
     const authHeader = req.headers.token;
     console.log('authHeader in backend:',authHeader)
