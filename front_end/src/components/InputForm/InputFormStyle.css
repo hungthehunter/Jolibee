@@ -1,0 +1,9 @@
+.WrapperInputStyle{
+        border: none !important;
+        border-bottom: 1px solid #ccc !important;
+        background-color: #fcfcfc !important; 
+        border-radius: 5px !important;
+        padding: 15px !important;
+        width: 100% !important;
+        outline: none !important; 
+}

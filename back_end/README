@@ -2,6 +2,8 @@
 # Install dependency
 - npm i express dotenv bcrypt jsonwebtoken body-parser cors
 - npm install mongoose@6.2.2
+- npm install express multer cloudinary multer-storage-cloudinary dotenv
+
 
 // JWT and bcrypt password for login
 - npm install bcrypt

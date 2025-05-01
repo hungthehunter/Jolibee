@@ -1,0 +1,33 @@
+.profile{
+    position: relative;
+    background: url("../assets/hero/hero-1.jpg") no-repeat center center;
+    background-size: cover;
+    background-attachment: fixed;
+    padding-top: 170px;
+    padding-bottom: 90px;
+    height: 100vh;
+}
+
+.profile .form-label{
+    font-size: large;
+    font-weight: bold;
+    color: black;
+
+}
+
+.profile .form-col_button{
+display: flex;
+align-items: center;
+text-align: center;
+}
+
+.profile .form-button{
+    background-color: #00e5ff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}

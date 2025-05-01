@@ -1,9 +1,15 @@
+// src/routes/OrderRouter.js
 const express = require('express');
 const router = express.Router();
-const OrderController = require('../controllers/OrderController');
-const {authMiddleware} = require('../middleware/AuthMiddleware')
+const orderController = require('../controllers/OrderController');
+const { authMiddleware,authUserMiddleware } = require('../middleware/AuthMiddleware');
 
-router.post('/create',authMiddleware,OrderController.createOrder);
-router.get('/get-details/:id',authMiddleware,OrderController.getOrderDetails);
-router.get('/get-all-order',authMiddleware,OrderController.getAllOrder);
-router.delete('/cancel-order/:id',authMiddleware,OrderController.cancelOrderDetails);
+// Routes
+router.post('/create/:id', authUserMiddleware, orderController.createOrder);
+router.get('/get-details-order/:id', authUserMiddleware, orderController.getOrderDetails);
+router.get('/get-all-order-user-id/:id',authUserMiddleware, orderController.getAllOrderByUserId);
+router.delete('/cancel-order/:id',authUserMiddleware,orderController.cancelOrderDetails)
+router.get('/get-all-order',orderController.getAllOrder)
+router.put('/update-order/:id',authUserMiddleware,orderController.updateOrder)
+
+module.exports = router;

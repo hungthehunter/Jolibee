@@ -85,6 +85,14 @@ header .roundpoint {
   right: -8px;
 }
 
+.popover-content{
+  cursor: 'pointer';
+  &:hover{
+    color: #fff;
+    background-color: red;
+  }
+}
+
 /* Media Query CSS */
 
 @media (max-width: 992px) {

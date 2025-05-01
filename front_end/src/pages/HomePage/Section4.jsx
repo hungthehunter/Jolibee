@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
 import PromotionImage from "../../assets/promotion/pro.png";
 
 function Section4() {
@@ -14,25 +14,20 @@ function Section4() {
             <Col lg={6} className="px-5">
               <h2>Nothing brings people together like a good burger</h2>
               <p>
-                Semper lacus cursus porta primis ligula risus tempus and
-                sagittis ipsum mauris lectus laoreet purus ipsum tempor enim
-                ipsum porta justo integer ultrice aligula lectus aenean magna
-                and pulvinar purus at pretium gravida
+              A delicious burger experience that unites friends and family. With rich flavors, fresh ingredients, and a perfectly grilled patty, this burger is more than just a meal—it's a moment to share and enjoy together
               </p>
               <ul>
                 <li>
                   <p>
-                    Fringilla risus, luctus mauris orci auctor purus euismod
-                    pretium purus pretium ligula rutrum tempor sapien
+                  More than just a meal, this burger is a reason to gather. With its juicy patty, fresh toppings, and perfectly toasted bun, it turns any moment into a shared experience of flavor and joy
                   </p>
                 </li>
                 <li>
-                  <p>Quaerat sodales sapien euismod purus blandit</p>
+                  <p>Whether it's a casual hangout or a family dinner, this burger brings people together. Packed with bold flavors and crafted with care, it's the perfect excuse to enjoy great company</p>
                 </li>
                 <li>
                   <p>
-                    Nemo ipsam egestas volute turpis dolores ut aliquam quaerat
-                    sodales sapien undo pretium a purus mauris
+                  Every bite of this burger is a reminder that good food is best enjoyed with good people. From the first crunch to the last savory bite, it’s a meal made for sharing
                   </p>
                 </li>
               </ul>

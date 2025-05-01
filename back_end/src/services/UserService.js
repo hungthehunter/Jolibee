@@ -1,5 +1,6 @@
 const User = require("../models/UserModel");
 const bcrypt = require("bcrypt");
+const cloudinary = require("cloudinary").v2;
 const { generalAccessToken, generalRefreshToken } = require("./JwtService");
 const { default: mongoose } = require("mongoose");
 
@@ -37,6 +38,46 @@ const createUser = (newUser) => {
   });
 };
 
+const createUserNoRegister = (newUser) => {
+  return new Promise(async (resolve, reject) => {
+    const { name, email, password, isAdmin, phone, address, avatar, city } =
+      newUser;
+    try {
+      const checkUser = await User.findOne({ email });
+
+      if (checkUser !== null) {
+        return resolve({
+          status: "ERR",
+          message: "The email is already in use",
+        });
+      }
+
+      const hash = bcrypt.hashSync(password, 10);
+
+      const createdUser = await User.create({
+        name,
+        email,
+        password: hash,
+        isAdmin,
+        phone,
+        address,
+        avatar,
+        city,
+      });
+
+      if (createdUser) {
+        return resolve({
+          status: "OK",
+          message: "User created successfully",
+          data: createdUser,
+        });
+      }
+    } catch (error) {
+      return reject(error);
+    }
+  });
+};
+
 const loginUser = (userLogin) => {
   return new Promise(async (resolve, reject) => {
     const { email, password } = userLogin;
@@ -46,7 +87,7 @@ const loginUser = (userLogin) => {
       });
       if (checkUser === null) {
         resolve({
-          status: "OK",
+          status: "ERR",
           message: "The user is not defined",
         });
       }
@@ -54,7 +95,7 @@ const loginUser = (userLogin) => {
       if (checkUser)
         if (!comparedPassword) {
           resolve({
-            status: "OK",
+            status: "ERR",
             message: "The password is  incorrect",
           });
         }
@@ -83,7 +124,9 @@ const loginUser = (userLogin) => {
 const updateUser = (id, data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const checkUser = await User.findOne({_id: mongoose.Types.ObjectId(id)});
+      const checkUser = await User.findOne({
+        _id: mongoose.Types.ObjectId(id),
+      });
       if (checkUser === null) {
         resolve({
           status: "OK",
@@ -108,7 +151,7 @@ const updateUser = (id, data) => {
 const deleteUser = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const checkedUser = await User.findOne({ _id: id});
+      const checkedUser = await User.findOne({ _id: id });
 
       if (checkedUser === null) {
         resolve({
@@ -150,10 +193,11 @@ const getDetailUser = (id) => {
     try {
       const user = await User.findOne({ _id: id });
       if (user === null) {
-      resolve({
-          status: "OK",
+        resolve({
+          status: "ERR",
           message: "The user is not defined",
-        });}
+        });
+      }
       resolve({
         status: "OK",
         message: "Get user successfully",
@@ -164,6 +208,25 @@ const getDetailUser = (id) => {
         status: "ERR",
         message: error.message,
       });
+    }
+  });
+};
+
+const deleteMany = ({ ids }) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const result = await User.deleteMany({ _id: { $in: ids } }
+      );
+
+      if (result.deletedCount === 0) {
+        throw new Error("Không có người dùng nào bị xóa!");
+      }
+      resolve({
+        status: "OK",
+        message: "Delete Many User successfully",
+      });
+    } catch (error) {
+      reject(error);
     }
   });
 };
@@ -198,4 +261,6 @@ module.exports = {
   getAllUser,
   getDetailUser,
   refreshToken,
+  createUserNoRegister,
+  deleteMany,
 };

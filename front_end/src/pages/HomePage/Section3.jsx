@@ -1,95 +1,41 @@
-import React from "react";
-import { Container, Row, Col } from "react-bootstrap";
-import Image1 from "../../assets/menu/burger-11.jpg";
-import Image2 from "../../assets/menu/burger-12.jpg";
-import Image3 from "../../assets/menu/burger-13.jpg";
-import Image4 from "../../assets/menu/burger-14.jpg";
-import Image5 from "../../assets/menu/burger-15.jpg";
-import Image6 from "../../assets/menu/burger-16.jpg";
-import Image7 from "../../assets/menu/burger-17.jpg";
-import Image8 from "../../assets/menu/burger-18.jpg";
-import Cards from "../../components/Layouts/Cards";
+import { useQuery } from "@tanstack/react-query";
+import React, { useEffect, useMemo, useState } from "react";
+import { Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import ButtonInputSearch from "../../components/ButtonComponent/ButtonInputSearch/ButtonInputSearch";
+import CategoryComponent from "../../components/CategoryComponent/CategoryComponent";
+import Cards from "../../components/Layouts/Cards";
+import ProductDetailComponent from "../../components/ProductDetailComponent/ProductDetailComponent";
+import { useDebounce } from "../../hooks/useDebounce";
+import * as ProductService from "../../services/ProductService";
 
-// Mock Data Cards
-const mockData = [
-  {
-    id: "0001",
-    image: Image1,
-    title: "Crispy Chicken",
-    paragraph: "Chicken breast, chilli sauce, tomatoes, pickles, coleslaw",
-    rating: 5,
-    price: 99.15,
-  },
-  {
-    id: "0002",
-    image: Image2,
-    title: "Ultimate Bacon",
-    paragraph: "House patty, cheddar cheese, bacon, onion, mustard",
-    rating: 4.5,
-    price: 99.32,
-  },
-  {
-    id: "0003",
-    image: Image3,
-    title: "Black Sheep",
-    paragraph: "American cheese, tomato relish, avocado, lettuce, red onion",
-    rating: 4,
-    price: 69.15,
-  },
-  {
-    id: "0004",
-    image: Image4,
-    title: "Vegan Burger",
-    paragraph: "House patty, cheddar cheese, bacon, onion, mustard",
-    rating: 3.5,
-    price: 99.25,
-  },
-  {
-    id: "0005",
-    image: Image5,
-    title: "Double Burger",
-    paragraph: "2 patties, cheddar cheese, mustard, pickles, tomatoes",
-    rating: 3.0,
-    price: 59.25,
-  },
-  {
-    id: "0006",
-    image: Image6,
-    title: "Turkey Burger",
-    paragraph: "Turkey, cheddar cheese, onion, lettuce, tomatoes, pickles",
-    rating: 3,
-    price: 79.18,
-  },
-  {
-    id: "0007",
-    image: Image7,
-    title: "Smokey House",
-    paragraph: "patty, cheddar cheese, onion, lettuce, tomatoes, pickles",
-    rating: 2.5,
-    price: 99.19,
-  },
-  {
-    id: "0008",
-    image: Image8,
-    title: "Classic Burger",
-    paragraph: "cheddar cheese, ketchup, mustard, pickles, onion",
-    rating: 2.0,
-    price: 89.12,
-  },
-  // Add more mock data objects as needed
+// Mock category images (fallback)
+import Burger_banner from "../../assets/selection/burger_banner.jpg";
+import Burger_combo_banner from "../../assets/selection/burger_combo_banner.jpg";
+import Chip_banner from "../../assets/selection/chip_banner.png";
+import Drink_banner from "../../assets/selection/drink_banner.jpg";
+import New_banner from "../../assets/selection/new_banner.png";
+import Rice_banner from "../../assets/selection/rice_banner.png";
+import Soft_drink_banner from "../../assets/selection/soft_drink_banner.png";
+
+const categoryData = [
+  { id: "0001", image: New_banner, title: "New Food" },
+  { id: "0002", image: Burger_banner, title: "Burger" },
+  { id: "0003", image: Burger_combo_banner, title: "Combo" },
+  { id: "0004", image: Drink_banner, title: "Fried Chicken" },
+  { id: "0005", image: Chip_banner, title: "Chips" },
+  { id: "0006", image: Rice_banner, title: "Brown Rice" },
+  { id: "0007", image: Soft_drink_banner, title: "Soft Drink" },
 ];
 
-// Rating Logical Data
 const renderRatingIcons = (rating) => {
   const stars = [];
-
   for (let i = 0; i < 5; i++) {
     if (rating > 0.5) {
       stars.push(<i key={i} className="bi bi-star-fill"></i>);
       rating--;
-    } else if (rating > 0 && rating < 1) {
-      stars.push(<i key={"half"} className="bi bi-star-half"></i>);
+    } else if (rating > 0) {
+      stars.push(<i key={`half${i}`} className="bi bi-star-half"></i>);
       rating--;
     } else {
       stars.push(<i key={`empty${i}`} className="bi bi-star"></i>);
@@ -99,53 +45,171 @@ const renderRatingIcons = (rating) => {
 };
 
 function Section3() {
-  return (
-    <section className="menu_section">
-      <Container>
-        <Row>
-          <Col lg={{ span: 8, offset: 2 }} className="text-center mb-5">
-            <h2>OUR CRAZY BURGERS</h2>
-            <p className="para">
-              Aliquam a augue suscipit, luctus neque purus ipsum neque undo
-              dolor primis libero tempus, blandit a cursus varius magna
-            </p>
-          </Col>
-        </Row>
-        <Row>
-          {mockData.map((cardData, index) => (
-            <Cards
-              key={index}
-              image={cardData.image}
-              rating={cardData.rating}
-              title={cardData.title}
-              paragraph={cardData.paragraph}
-              price={cardData.price}
-              renderRatingIcons={renderRatingIcons}
-            />
-          ))}
-        </Row>
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const debouncedSearch = useDebounce(searchTerm, 500);
+  const [visibleCount, setVisibleCount] = useState(0);
+  const [itemsPerLoad, setItemsPerLoad] = useState(6);
 
-        <Row className="pt-5">
-          <Col sm={6} lg={5}>
-            <div className="ads_box ads_img1 mb-5 mb-md-0">
-              <h4 className="mb-0">GET YOUR FREE</h4>
-              <h5>CHEESE FRIES</h5>
-              <Link to="/" className="btn btn_red px-4 rounded-0">
-                Learn More
-              </Link>
-            </div>
-          </Col>
-          <Col sm={6} lg={7}>
-            <div className="ads_box ads_img2">
-              <h4 className="mb-0">GET YOUR FREE</h4>
-              <h5>CHEESE FRIES</h5>
-              <Link to="/" className="btn btn_red px-4 rounded-0">
-                Learn More
-              </Link>
-            </div>
-          </Col>
-        </Row>
-      </Container>
+  // Responsive setup for product cards
+  useEffect(() => {
+    const updateItemsPerLoad = () => {
+      const w = window.innerWidth;
+      if (w < 576) {
+        setItemsPerLoad(2);
+        setVisibleCount(2);
+      } else if (w < 992) {
+        setItemsPerLoad(4);
+        setVisibleCount(4);
+      } else {
+        setItemsPerLoad(6);
+        setVisibleCount(6);
+      }
+    };
+    updateItemsPerLoad();
+    window.addEventListener("resize", updateItemsPerLoad);
+    return () => window.removeEventListener("resize", updateItemsPerLoad);
+  }, []);
+
+  // Fetch all products with search + limit
+  const {
+    data: products = [],
+    isLoading: loadingProducts,
+  } = useQuery({
+    queryKey: ["products", debouncedSearch, visibleCount],
+    queryFn: async () => {
+      const res = await ProductService.getAllProduct(debouncedSearch, visibleCount);
+      return res.data;
+    },
+    keepPreviousData: true,
+    retry: 3,
+    retryDelay: 1000,
+  });
+
+
+  useEffect(()=>{
+    console.log(products)
+},[])
+
+  const categories = useMemo(() => {
+    const map = new Map();
+    products.forEach((p) => {
+      if (!map.has(p.type)) {
+        map.set(p.type, p.image);
+      }
+    });
+    return Array.from(map.entries()).map(([type, image], idx) => ({
+      id: (idx + 1).toString().padStart(4, "0"),
+      name: type,
+      image,
+    }));
+  }, [products]);
+
+  // Handlers
+  const handleCardClick = (product) => {
+    setSelectedProduct(product);
+    setShowModal(true);
+  };
+
+  const handleSearchChange = (e) => setSearchTerm(e.target.value);
+
+  const handleLoadMore = () => setVisibleCount((c) => c + itemsPerLoad);
+
+  return (
+    <section className="hero_section">
+      <section className="menu_section">
+        <Container>
+          {/* Heading */}
+          <Row>
+            <Col lg={{ span: 8, offset: 2 }} className="text-center mb-5">
+              <h2 style={{ color: "#FF6347" }}>LOOKING FOR THE MENU</h2>
+            </Col>
+          </Row>
+
+          {/* Categories */}
+          <CategoryComponent
+            categories={categories.length > 0 ? categories : categoryData}
+          />
+
+          {/* Product Detail Modal */}
+          <ProductDetailComponent
+            product={selectedProduct}
+            show={showModal}
+            onHide={() => setShowModal(false)}
+          />
+
+          {/* Search Bar */}
+          <Row>
+            <Col lg={{ span: 8, offset: 2 }} className="text-center mb-5">
+              <h2 style={{ color: "#F27B01" }}>OR FIND YOUR CRAZY BURGERS</h2>
+              <ButtonInputSearch
+                size="lg"
+                placeholder="Search your burger"
+                textButton="Searching"
+                colorButton="#F27B01"
+                value={searchTerm}
+                onChange={handleSearchChange}
+              />
+            </Col>
+          </Row>
+
+          {/* Product Cards */}
+          <Row>
+            {products.map((prod, idx) => (
+              <Cards
+                key={idx}
+                image={prod.image}
+                name={prod.name}
+                description={prod.description}
+                price={prod.price}
+                rating={prod.rating}
+                countInStock={prod.countInStock}
+                renderRatingIcons={renderRatingIcons}
+                type={prod.type}
+                onClick={() => handleCardClick(prod)}
+              />
+            ))}
+          </Row>
+
+          {/* Load More */}
+          {products.length >= visibleCount && (
+            <Row className="mt-4">
+              <Col className="text-center">
+                <button
+                  className="btn btn-outline-warning"
+                  onClick={handleLoadMore}
+                  style={{ fontWeight: "bold" }}
+                >
+                  Load More
+                </button>
+              </Col>
+            </Row>
+          )}
+
+          {/* Promo Banners */}
+          <Row className="pt-5">
+            <Col sm={6} lg={5}>
+              <div className="ads_box ads_img1 mb-5 mb-md-0">
+                <h4 className="mb-0">GET YOUR FREE</h4>
+                <h5>CHEESE FRIES</h5>
+                <Link to="/" className="btn btn_red px-4 rounded-0">
+                  Learn More
+                </Link>
+              </div>
+            </Col>
+            <Col sm={6} lg={7}>
+              <div className="ads_box ads_img2">
+                <h4 className="mb-0">GET YOUR FREE</h4>
+                <h5>CHEESE FRIES</h5>
+                <Link to="/" className="btn btn_red px-4 rounded-0">
+                  Learn More
+                </Link>
+              </div>
+            </Col>
+          </Row>
+        </Container>
+      </section>
     </section>
   );
 }

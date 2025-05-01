@@ -1,10 +1,10 @@
 import Header from "../Layouts/Header"
 
-function DefaultComponent({Children}){
+function DefaultComponent({children}){
     return(
         <div>
             <Header/>
-            {Children}
+            {children}
         </div>
     )
     }

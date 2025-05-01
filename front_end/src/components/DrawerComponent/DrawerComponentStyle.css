@@ -1,0 +1,30 @@
+.drawer-modal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    margin: 0;
+    height: 100vh;
+    width: 40vw;
+    max-width: none;
+    transform: translateX(0);
+    transition: transform 0.3s ease-in-out;
+    border-radius: 0;
+  }
+  
+  .drawer-modal .modal-content {
+    height: 100%;
+    border-radius: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .drawer-modal .modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+  }
+  
+  .drawer-backdrop {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+  

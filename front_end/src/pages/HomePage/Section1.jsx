@@ -1,7 +1,7 @@
 import React from "react";
-import { Container, Row, Col } from "react-bootstrap";
-import Burger from "../../assets/hero/hero-2.png";
+import { Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import Burger from "../../assets/hero/hero-2.png";
 
 const Section1 = () => {
   return (
@@ -24,9 +24,9 @@ const Section1 = () => {
               <h1 className="text-white">New Burger</h1>
               <h2 className="text-white">With Onion</h2>
               <p className="text-white pt-2 pb-4">
-                Feugiat primis ligula risus auctor laoreet augue egestas mauris
-                viverra tortor in iaculis pretium at magna mauris ipsum primis
-                rhoncus feugiat
+              A perfect combination of delicious burger meat and crispy onions
+              Crafted to deliver rich flavors ,
+              this burger tastes even better when enjoyed with family
               </p>
               <Link to="/" className="btn order_now">
                 Order Now

@@ -162,6 +162,7 @@ const deleteProduct = (id) => {
           message: "The product is not defined",
         });
       }
+
       await Product.findByIdAndDelete(id);
       resolve({
         status: "OK",
@@ -173,7 +174,7 @@ const deleteProduct = (id) => {
   });
 };
 
-const deleteManyProduct = (ids) =>{
+const deleteMany = (ids) =>{
   return new Promise(async(resolve,reject)=>{
     try {
       await Product.deleteMany({_id: ids})
@@ -208,6 +209,6 @@ module.exports = {
   getDetailProduct,
   deleteProduct,
   getAllProduct,
-  deleteManyProduct,
+  deleteMany,
   getAllType
 };

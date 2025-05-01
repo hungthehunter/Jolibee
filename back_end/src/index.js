@@ -18,8 +18,6 @@ app.get('/',(req,res)=>{
     res.send('Hello World');
 })
 
-
-
 routes(app);
 
 // Connect to MongoDB

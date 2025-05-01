@@ -21,10 +21,9 @@ If you are developing a production application, we recommend using TypeScript an
 - npm install @ant-design/icons --save
 - npm install react-bootstrap
 - npm install bootstrap bootstrap-icons
-
-
-
-// Dùng cho slider chuyển động
+- npm install jwt-decode
+- npm install exceljs
+- npm i redux-persist
 - npm i react-slick (Dùng để image slider chuyển tự động)
 - npm install slick-carousel --save
 - npm install axios

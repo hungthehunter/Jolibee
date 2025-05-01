@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 function Section7() {
@@ -11,9 +11,7 @@ function Section7() {
             <h4>We Guarantee</h4>
             <h2>30 Minutes Delivery!</h2>
             <p>
-              Aliquam a augue suscipit, luctus neque purus ipsum neque undo
-              dolor primis libero tempus, blandit a cursus varius luctus neque
-              magna
+            Fast, reliable, and efficient! Get your order delivered within 30 minutes, ensuring fresh and hot meals right at your doorstep. With optimized routes and dedicated couriers, we guarantee speed without compromising quality
             </p>
             <Link to="/" className="btn btn_red px-4 py-2 rounded-0">
               Call: 999-888-7777

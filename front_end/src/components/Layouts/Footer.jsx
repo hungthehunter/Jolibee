@@ -47,7 +47,7 @@ function Footer() {
             <Col sm={6} lg={3} className="mb-4 mb-lg-0">
               <div className="text-center">
                 <h5>Order Now</h5>
-                <p>Quaerat neque purus ipsum</p>
+                <p>Calling us by phone number</p>
                 <p>
                   <Link to="tel:9998887777" className="calling">
                     999-888-7777
@@ -58,7 +58,7 @@ function Footer() {
             <Col sm={6} lg={3} className="mb-4 mb-lg-0">
               <div className="text-center">
                 <h5>Follow Us</h5>
-                <p>Quaerat neque purus ipsum</p>
+                <p>Our huge online society</p>
                 <ul className="list-unstyled text-center mt-2">
                   <li>
                     <Link to="/">

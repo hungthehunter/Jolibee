@@ -1,5 +1,6 @@
 const UserService = require("../services/UserService");
-const JwtService = require("../services/JwtService")
+const JwtService = require("../services/JwtService");
+const cloudinary = require("cloudinary").v2;
 const createUser = async (req, res) => {
   try {
     const { name, email, password, confirmPassword, phone } = req.body;
@@ -27,6 +28,48 @@ const createUser = async (req, res) => {
   }
 };
 
+const createUserNoRegister = async (req, res) => {
+  try {
+    const image = req.file;
+    const { name, email, password, isAdmin, phone, address, city } = req.body;
+
+    let avatar = null;
+    if (image) {
+      avatar = image.path;
+    }
+
+    const data = {
+      name,
+      email,
+      password,
+      isAdmin,
+      phone,
+      address,
+      avatar,
+      city,
+    };
+
+    const newUser = await UserService.createUserNoRegister(data);
+
+    return res.status(201).json({
+      status: "OK",
+      message: "Create user successfully",
+      data: newUser,
+    });
+  } catch (error) {
+    // Nếu upload ảnh thành công nhưng user tạo thất bại thì xóa ảnh
+    if (req.file?.filename) {
+      await cloudinary.uploader.destroy(req.file.filename);
+    }
+
+    return res.status(400).json({
+      status: "ERR",
+      message: "Create user failed",
+      error: error.message,
+    });
+  }
+};
+
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -34,7 +77,7 @@ const loginUser = async (req, res) => {
     const isCheckEmail = reg.test(email);
     if (!email || !password) {
       return res
-        .status(200)
+        .status(400)
         .json({ status: "ERR", message: "Please fill in all fields" });
     } else if (!isCheckEmail) {
       return res.status(200).json({
@@ -48,7 +91,7 @@ const loginUser = async (req, res) => {
     res.cookie("refresh_token", refresh_token, {
       httpOnly: true,
       secure: false,
-      samesite: 'strict',
+      samesite: "strict",
     });
     return res.status(200).json(newResponse);
   } catch (error) {
@@ -58,39 +101,147 @@ const loginUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    const userId = req.params.id;
-    const data = req.body;
-    if (!userId) {
-      return res.status.json({
+    const id = req.params.id;
+    const image = req.file; // Có thể undefined nếu không upload ảnh
+    const { name, email, password, isAdmin, phone, address, city } = req.body;
+
+    const oldUser = await UserService.getDetailUser(id);
+    if (!oldUser) {
+      return res.status(404).json({
         status: "ERR",
-        message: "The userId is required ",
+        message: "User not found",
       });
     }
-    const response = await UserService.updateUser(userId, data);
-    return res.status(200).json(response);
+
+    let newAvatar = oldUser?.data?.avatar || null;
+
+    // Nếu có ảnh mới và ảnh cũ tồn tại thì xóa ảnh cũ khỏi Cloudinary
+    if (image) {
+      if (oldUser?.data?.avatar) {
+        const parts = oldUser.data.avatar.split("/upload/");
+        if (parts.length === 2) {
+          const imagePath = parts[1].split(".")[0];
+          const publicId = imagePath.split("/").slice(1).join("/");
+          await cloudinary.uploader.destroy(publicId);
+        }
+      }
+
+      newAvatar = image.path; // Cập nhật avatar mới
+    }
+
+    const data = {
+      name,
+      email,
+      password,
+      isAdmin,
+      phone,
+      address,
+      avatar: newAvatar,
+      city,
+    };
+
+    await UserService.updateUser(id, data);
+    return res.status(200).json({
+      status: "OK",
+      message: "Update user successfully",
+    });
   } catch (error) {
-    return res.status(404).json({ message: error.message });
+    if (req.file?.filename) {
+      await cloudinary.uploader.destroy(req.file.filename);
+    }
+
+    return res.status(400).json({
+      status: "ERR",
+      message: "Update user failed",
+      error: error.message,
+    });
   }
 };
 
 const deleteUser = async (req, res) => {
   try {
-    const userId = req.params.id;
-    if (!userId) {
+    const id = req.params.id;
+    const user = await UserService.getDetailUser(id);
+    if (!user) {
       return res.status(404).json({
         status: "ERR",
-        message: "the userId is required",
+        message: "User not found",
       });
     }
-    const response = await UserService.deleteUser(userId);
-    return res.status(200).json(response);
+
+    // Xoá avatar nếu tồn tại
+    const avatarUrl = user?.data?.avatar;
+    if (avatarUrl) {
+      const parts = avatarUrl.split("/upload/");
+      if (parts.length === 2) {
+        const imagePath = parts[1].split(".")[0];
+        const publicId = imagePath.split("/").slice(1).join("/");
+        await cloudinary.uploader.destroy(publicId);
+      }
+    }
+
+    await UserService.deleteUser(id);
+    return res.status(200).json({
+      status: "OK",
+      message: "User deleted successfully",
+    });
   } catch (error) {
-    return res.status(404).json({
+    return res.status(400).json({
       status: "ERR",
-      message: error.message,
+      message: "Delete user failed",
+      error: error.message,
     });
   }
 };
+
+const deleteManyUser = async (req, res) => {
+  try {
+    const { ids } = req.body;
+
+    if (!ids || !Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({
+        status: "ERR",
+        message: 'The "ids" field is required and must be a non-empty array',
+      });
+    }
+
+    // Lấy chi tiết user và xóa avatar trên Cloudinary nếu có
+    const users = await Promise.all(
+      ids.map((id) => UserService.getDetailUser(id))
+    );
+
+    // Xóa avatar từ Cloudinary nếu có
+    for (const user of users) {
+      if (user && user.data && user.data.avatar) {
+        const avatarUrl = user.data.avatar;
+        const parts = avatarUrl.split("/upload/");
+        if (parts.length === 2) {
+          const imagePath = parts[1].split(".")[0];
+          const publicId = imagePath.split("/").slice(1).join("/");
+          console.log("Xóa avatar có publicId:", publicId);
+          await cloudinary.uploader.destroy(publicId);
+        }
+      }
+    }
+
+    // Xóa users trong database
+    const response = await UserService.deleteMany({ ids });
+
+    return res.status(200).json({
+      status: "OK",
+      message: response.message, // Thông báo trả về từ service
+      data: response,
+    });
+  } catch (error) {
+    console.error("Delete many users failed:", error);
+    return res.status(500).json({
+      status: "ERR",
+      message: "Failed to delete users",
+      error: error.message,
+    });
+  }
+};
+
 
 const getAllUser = async (req, res) => {
   try {
@@ -121,10 +272,10 @@ const refreshToken = async (req, res) => {
   try {
     const token = req.cookies.refresh_token;
     if (token) {
-    return res.status(200).json({
-      status:"ERR",
-      message: 'The token is required'
-    })
+      return res.status(200).json({
+        status: "ERR",
+        message: "The token is required",
+      });
     }
     const response = await JwtService.refreshJWTServiceToken(token);
     return res.status(200).json(response);
@@ -136,20 +287,20 @@ const refreshToken = async (req, res) => {
   }
 };
 
-const logoutUser = async(req,res) => {
+const logoutUser = async (req, res) => {
   try {
-    res.clearCookies('refresh_token');
+    res.clearCookie("refresh_token");
     return res.status(200).json({
-      status: 'OK',
-      message: 'Logout success'
+      status: "OK",
+      message: "Logout success",
     });
   } catch (error) {
     return res.status(404).json({
-      status: 'ERR',
-      message: error.message
-    })
+      status: "ERR",
+      message: error.message,
+    });
   }
-}
+};
 
 module.exports = {
   createUser,
@@ -159,5 +310,7 @@ module.exports = {
   getAllUser,
   getDetailUser,
   refreshToken,
-  logoutUser
+  logoutUser,
+  deleteManyUser,
+  createUserNoRegister,
 };

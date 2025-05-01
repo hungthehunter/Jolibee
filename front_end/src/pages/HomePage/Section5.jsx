@@ -23,8 +23,7 @@ function Section5() {
               <h4>Download mobile App and</h4>
               <h2>save up to 20%</h2>
               <p>
-                Aliquam a augue suscipit, luctus neque purus ipsum and neque
-                dolor primis libero tempus, blandit varius
+              Get exclusive discounts and seamless ordering with our mobile app! Enjoy fast access to deals, easy navigation, and a smooth checkout experience—all while saving up to 20% on your favorite items. Convenience and savings, right at your fingertips
               </p>
               <Link to="/">
                 <img

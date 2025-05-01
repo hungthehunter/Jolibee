@@ -1,7 +1,16 @@
 import React from "react";
 import { Card, Col } from "react-bootstrap";
 
-function Cards({ image, rating, title, paragraph, price, renderRatingIcons ,  onClick }) {
+function Cards({
+  image,
+  type,
+  rating,
+  name,
+  description,
+  price,
+  renderRatingIcons,
+  onClick,
+}) {
   return (
     <Col sm={6} lg={4} xl={3} className="mb-4">
       <Card className="overflow-hidden">
@@ -16,18 +25,20 @@ function Cards({ image, rating, title, paragraph, price, renderRatingIcons ,  on
             </div>
           </div>
 
-          <Card.Title>{title}</Card.Title>
-          <Card.Text>{paragraph}</Card.Text>
+          <Card.Title>{name}</Card.Title>
+          <Card.Text>{description}</Card.Text>
+          <Card.Text>{type}</Card.Text>
+
 
           <div className="d-flex align-items-center justify-content-between">
             <div className="menu_price">
               <h5 className="mb-0">${price}</h5>
             </div>
             <div className="add_to_card" onClick={onClick}>
-            <p>
+              <p>
                 <i className="bi bi-bag me-2"></i>
                 Add To Cart
-                </p>
+              </p>
             </div>
           </div>
         </Card.Body>
