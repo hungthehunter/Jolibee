@@ -91,7 +91,7 @@ const loginUser = async (req, res) => {
     res.cookie("refresh_token", refresh_token, {
       httpOnly: true,
       secure: false,
-      samesite: "none",
+      samesite: "None",
     });
     return res.status(200).json(newResponse);
   } catch (error) {
@@ -271,7 +271,7 @@ const getDetailUser = async (req, res) => {
 const refreshToken = async (req, res) => {
   try {
     const token = req.cookies.refresh_token;
-    if (token) {
+    if (!token) {
       return res.status(200).json({
         status: "ERR",
         message: "The token is required",
