@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Accordion, Button, Card, Col, Container, Row } from "react-bootstrap";
 import AdminGenerateQR from "../../components/Admin/AdminGenerateQR/AdminGenerateQR";
 import AdminOrder from "../../components/Admin/AdminOrder/AdminOrder";
@@ -99,6 +99,7 @@ const AdminPage = () => {
               </Accordion.Body>
             </Accordion.Item>
 
+            {/* Table */}
             <Accordion.Item eventKey="3">
               <Accordion.Header>Table</Accordion.Header>
               <Accordion.Body>
@@ -120,6 +121,7 @@ const AdminPage = () => {
                 </Button>
               </Accordion.Body>
             </Accordion.Item>
+
           </Accordion>
         </Col>
 

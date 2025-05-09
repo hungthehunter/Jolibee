@@ -24,7 +24,6 @@ const authMiddleware = (req,res,next) =>{
 
 const authUserMiddleware = (req, res, next) => {
     const authHeader = req.headers.token;
-    console.log('authHeader in backend:',authHeader)
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
         return res.status(401).json({
@@ -37,7 +36,6 @@ const authUserMiddleware = (req, res, next) => {
 
     const token = authHeader.split(' ')[1];
     const userId = req.params.id;
-console.log('token in backend:',token)
     jwt.verify(token, process.env.ACCESS_TOKEN, (err, user) => {
         if (err) {
             return res.status(403).json({
