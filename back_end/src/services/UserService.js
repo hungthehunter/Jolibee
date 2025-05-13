@@ -3,7 +3,6 @@ const bcrypt = require("bcrypt");
 const cloudinary = require("cloudinary").v2;
 const { generalAccessToken, generalRefreshToken } = require("./JwtService");
 const { default: mongoose } = require("mongoose");
-
 const createUser = (newUser) => {
   return new Promise(async (resolve, reject) => {
     const { name, email, password, phone } = newUser;
@@ -148,6 +147,40 @@ const updateUser = (id, data) => {
   });
 };
 
+const updateNewPasswordUser = (id, data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const checkUser = await User.findOne({ _id: id });
+
+      if (checkUser === null) {
+        resolve({
+          status: "OK",
+          message: "The user is not defined",
+        });
+      } else {
+        // Hash password trước khi cập nhật
+        const hashedPassword = bcrypt.hashSync(data.password, 10);
+        const updateData = {
+          ...data,
+          password: hashedPassword, // Ghi đè password mới đã hash
+        };
+
+        const updateUserNewPassword = await User.findByIdAndUpdate(id, updateData, {
+          new: true,
+        });
+
+        resolve({
+          status: "OK",
+          message: "SUCCESS",
+          data: updateUserNewPassword,
+        });
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
 const deleteUser = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -264,4 +297,5 @@ module.exports = {
   refreshToken,
   createUserNoRegister,
   deleteMany,
+  updateNewPasswordUser
 };

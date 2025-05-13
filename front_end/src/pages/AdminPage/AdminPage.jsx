@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Accordion, Button, Card, Col, Container, Row } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import AdminGenerateQR from "../../components/Admin/AdminGenerateQR/AdminGenerateQR";
 import AdminOrder from "../../components/Admin/AdminOrder/AdminOrder";
 import AdminProduct from "../../components/Admin/AdminProduct/AdminProduct";
@@ -7,7 +8,7 @@ import AdminUser from "../../components/Admin/AdminUser/AdminUser";
 
 const AdminPage = () => {
   const [activeContent, setActiveContent] = useState("dashboard");
-
+  const navigate = useNavigate();
   const renderContent = () => {
     switch (activeContent) {
       case "user":
@@ -23,12 +24,34 @@ const AdminPage = () => {
     }
   };
 
+  const handleNavigateHome = () => {
+    navigate("/");
+  };
+
   return (
     <Container fluid>
       <Row>
         {/* Sidebar */}
         <Col md={3} className="bg-light p-3" style={{ minHeight: "100vh" }}>
-          <h4 className="mb-4">Admin Menu</h4>
+          <Container className="mb-4">
+            <div className="d-flex align-items-center">
+              <span className="me-2">
+                <i
+                  onClick={handleNavigateHome}
+                  className="bi bi-arrow-left"
+                  style={{ fontSize: "24px", cursor: "pointer" }}
+                ></i>
+              </span>
+              <h4
+                className="mb-0"
+                onClick={handleNavigateHome}
+                style={{ cursor: "pointer" }}
+              >
+                Back To Home
+              </h4>
+            </div>
+          </Container>
+
           <Accordion defaultActiveKey="0">
             {/* User Options */}
             <Accordion.Item eventKey="0">
@@ -121,7 +144,6 @@ const AdminPage = () => {
                 </Button>
               </Accordion.Body>
             </Accordion.Item>
-
           </Accordion>
         </Col>
 

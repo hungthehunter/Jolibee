@@ -91,9 +91,44 @@ const loginUser = async (req, res) => {
       httpOnly: true,
       secure: false,
       sameSite: "strict",
-      path: '/'
+      path: "/",
     });
-    return res.status(200).json({...newResponse,refresh_token});
+    return res.status(200).json({ ...newResponse, refresh_token });
+  } catch (error) {
+    return res.status(404).json({ message: error.message });
+  }
+};
+
+const updateUserNewPassword = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { email, password, confirmPassword } = req.body;
+    const reg = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const isCheckEmail = reg.test(email);
+    console.log("information đây này: ", email, password, confirmPassword,id);
+    if (!email || !password || !confirmPassword) {
+      return res
+        .status(200)
+        .json({ status: "ERR", message: "Please fill in all fields" });
+    } else if (!isCheckEmail) {
+      return res.status(200).json({
+        status: "ERR",
+        message: "Email is invalid",
+      });
+    } else if (password !== confirmPassword) {
+      return res.status.json({
+        status: "ERR",
+        message: "Password and Confirm Password are not the same",
+      });
+    }
+    const data = {
+      email,
+      password,
+      confirmPassword,
+    };
+
+    const response = await UserService.updateNewPasswordUser(id, data);
+    return res.status(200).json(response);
   } catch (error) {
     return res.status(404).json({ message: error.message });
   }
@@ -242,7 +277,6 @@ const deleteManyUser = async (req, res) => {
   }
 };
 
-
 const getAllUser = async (req, res) => {
   try {
     const response = await UserService.getAllUser();
@@ -270,7 +304,7 @@ const getDetailUser = async (req, res) => {
 
 const refreshToken = async (req, res) => {
   try {
-    const token = req.headers.token.split(' ')[1];
+    const token = req.headers.token.split(" ")[1];
     if (!token) {
       return res.status(200).json({
         status: "ERR",
@@ -313,4 +347,5 @@ module.exports = {
   logoutUser,
   deleteManyUser,
   createUserNoRegister,
+  updateUserNewPassword,
 };
