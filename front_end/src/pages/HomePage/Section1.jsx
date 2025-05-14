@@ -1,4 +1,3 @@
-import React from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Burger from "../../assets/hero/hero-2.png";
@@ -28,7 +27,7 @@ const Section1 = () => {
               Crafted to deliver rich flavors ,
               this burger tastes even better when enjoyed with family
               </p>
-              <Link to="/" className="btn order_now">
+              <Link to="/menu" className="btn order_now">
                 Order Now
               </Link>
             </div>

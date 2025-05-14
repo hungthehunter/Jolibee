@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Col, Nav, Row } from "react-bootstrap";
 import TypeProduct from '../TypeProduct/TypeProduct'; // Đường dẫn đúng tùy vào cấu trúc thư mục của bạn
 import "./CategoryComponentStyle.css";

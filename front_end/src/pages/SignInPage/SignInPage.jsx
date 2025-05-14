@@ -32,6 +32,8 @@ function SignInPage() {
     setPassword(e.target.value);
   };
 
+
+
   const handleSignIn = () => {
     mutation.mutate({
       email: email,
@@ -78,6 +80,10 @@ function SignInPage() {
 
   const handleNavigateSignUp = () => {
     navigate("/sign-up");
+  };
+
+  const handleForgotPasswordPage = () => {
+    navigate("/forgot-password");
   };
 
   const handleNavigateHome = () => {
@@ -187,7 +193,7 @@ function SignInPage() {
           />
 
           <p style={{ margin: "10px 0" }}>
-            <span className="WrapperTextLight">Forgot your password?</span>{" "}
+            <span className="WrapperTextLight" onClick={()=>handleForgotPasswordPage()}>Forgot your password?</span>{" "}
           </p>
           <p style={{ fontSize: "20px" }}>
             Doesn't have account yet?

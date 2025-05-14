@@ -1,5 +1,5 @@
 import { QRCodeSVG } from "qrcode.react"; // chú ý: import default
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import PayPalComponent from "../../components/PaypalComponent/PaypalComponent";
 import { orderContant } from "../../contant";
@@ -91,7 +91,6 @@ const ShippingAndPaymentOptions = ({
           {tableNumber && (
             <div className="mt-4 flex flex-col items-center">
               <QRCodeSVG value={generateTableUrl(tableNumber)} min={1} max={50} size={150} />
-              <p className="mt-2 text-sm text-gray-600">{generateTableUrl(tableNumber)}</p>
             </div>
           )}
         </div>

@@ -2,6 +2,15 @@ import { Button, Form, InputGroup } from "react-bootstrap";
 
 function ButtonInputSearch(props) {
   const { size, placeholder, textButton, colorButton, value, onChange } = props;
+  console.log(
+    "ButtonInputSearch props: ",
+    size,
+    placeholder,
+    textButton,
+    colorButton,
+    value,
+    onChange
+  );
   return (
     <InputGroup style={{ marginTop: "2rem" }}>
       <Form.Control

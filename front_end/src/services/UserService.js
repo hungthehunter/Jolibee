@@ -77,6 +77,19 @@ export const updateUser = async (id, formData, access_token) => {
   return res.data;
 };
 
+export const updateNewPasswordUser = async (id, formData, access_token) => {
+  const res = await axiosJWT.put(
+    `${import.meta.env.VITE_API_URL_BACKEND}/user/update-password-user/${id}`,
+    formData,
+    {
+      headers: {
+        token: `Bearer ${access_token}`,
+      },
+    }
+  );
+  return res.data;
+};
+
 export const getAllUser = async (access_token) => {
   const res = await axios.get(
     `${import.meta.env.VITE_API_URL_BACKEND}/user/get-all`,

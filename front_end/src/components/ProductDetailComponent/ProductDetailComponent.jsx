@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button, Col, Modal, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -133,7 +133,7 @@ function ProductDetailComponent({ product, show, onHide }) {
               className="modal-order-btn"
               onClick={handleAddOrderProduct}
             >
-              GỌI ĐẶT HÀNG - 19006960
+              Add to shopping cart
             </Button>
           </Col>
         </Row>

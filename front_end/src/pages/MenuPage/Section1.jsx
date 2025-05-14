@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import ButtonInputSearch from "../../components/ButtonComponent/ButtonInputSearch/ButtonInputSearch";
@@ -73,28 +73,39 @@ function Section1() {
   }, []);
 
   // Fetch all products with search + limit
-  const {
-    data: products = [],
-    isLoading: loadingProducts,
-  } = useQuery({
+  const { data: products = [], isLoading: loadingProducts } = useQuery({
     queryKey: ["products", debouncedSearch, visibleCount],
     queryFn: async () => {
-      const res = await ProductService.getAllProduct(debouncedSearch, visibleCount);
-      return res.data;
+      if (debouncedSearch.trim()) {
+        const res = await ProductService.getAllProduct(
+          debouncedSearch,
+          1000,
+          0
+        );
+        return res.data;
+      } else {
+        const res = await ProductService.getAllProduct("", visibleCount, 0);
+        return res.data;
+      }
     },
     keepPreviousData: true,
     retry: 3,
     retryDelay: 1000,
   });
 
-
-  useEffect(()=>{
-    console.log(products)
-},[])
+  const { data: allProductsForCategories = [], isLoading: loadingAllProducts } =
+    useQuery({
+      queryKey: ["all-products-for-categories"],
+      queryFn: async () => {
+        const res = await ProductService.getAllProduct("", 1000, 0);
+        return res.data;
+      },
+      staleTime: 5 * 60 * 1000, // Optional: Cache trong 5 phút
+    });
 
   const categories = useMemo(() => {
     const map = new Map();
-    products.forEach((p) => {
+    allProductsForCategories.forEach((p) => {
       if (!map.has(p.type)) {
         map.set(p.type, p.image);
       }
@@ -104,16 +115,23 @@ function Section1() {
       name: type,
       image,
     }));
-  }, [products]);
+  }, [allProductsForCategories]);
+
+  const filteredProducts = useMemo(() => {
+    let result = products;
+    if (searchTerm.trim() !== "") {
+      result = result.filter((p) =>
+        p.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    return result;
+  }, [products, searchTerm]);
 
   // Handlers
   const handleCardClick = (product) => {
     setSelectedProduct(product);
     setShowModal(true);
   };
-
-  const handleSearchChange = (e) => setSearchTerm(e.target.value);
-
   const handleLoadMore = () => setVisibleCount((c) => c + itemsPerLoad);
 
   return (
@@ -149,14 +167,14 @@ function Section1() {
                 textButton="Searching"
                 colorButton="#F27B01"
                 value={searchTerm}
-                onChange={handleSearchChange}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
             </Col>
           </Row>
 
           {/* Product Cards */}
           <Row>
-            {products.map((prod, idx) => (
+            {filteredProducts.map((prod, idx) => (
               <Cards
                 key={idx}
                 image={prod.image}
@@ -173,7 +191,7 @@ function Section1() {
           </Row>
 
           {/* Load More */}
-          {products.length >= visibleCount && (
+          {filteredProducts.length >= visibleCount && (
             <Row className="mt-4">
               <Col className="text-center">
                 <button

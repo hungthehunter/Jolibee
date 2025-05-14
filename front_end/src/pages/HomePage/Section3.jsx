@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import ButtonInputSearch from "../../components/ButtonComponent/ButtonInputSearch/ButtonInputSearch";
@@ -193,7 +193,7 @@ function Section3() {
               <div className="ads_box ads_img1 mb-5 mb-md-0">
                 <h4 className="mb-0">GET YOUR FREE</h4>
                 <h5>CHEESE FRIES</h5>
-                <Link to="/" className="btn btn_red px-4 rounded-0">
+                <Link to="/menu/Fresh_French" className="btn btn_red px-4 rounded-0">
                   Learn More
                 </Link>
               </div>
@@ -202,7 +202,7 @@ function Section3() {
               <div className="ads_box ads_img2">
                 <h4 className="mb-0">GET YOUR FREE</h4>
                 <h5>CHEESE FRIES</h5>
-                <Link to="/" className="btn btn_red px-4 rounded-0">
+                <Link to="/menu/Hambuger" className="btn btn_red px-4 rounded-0">
                   Learn More
                 </Link>
               </div>

@@ -1,5 +1,5 @@
 // Trong ModalShippingInfo.jsx
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import InputForm from "../../InputForm/InputForm";
 import LoadingComponent from "../../LoadingComponent/LoadingComponent";
@@ -16,6 +16,7 @@ const ModalShippingInfo = ({
     city: "",
     phone: "",
     address: "",
+    paymentMethod: "",
   });
   const [tableNumber, setTableNumber] = useState("");
   const [shippingMethod, setShippingMethod] = useState("FAST");
@@ -28,6 +29,7 @@ const ModalShippingInfo = ({
         city: userInfo?.city || "",
         phone: userInfo?.phone || "",
         address: userInfo?.address || "",
+        paymentMethod: userInfo?.paymentMethod || "",
       });
     }
   }, [userInfo, show]);
@@ -42,20 +44,25 @@ const ModalShippingInfo = ({
 
   const onSave = () => {
     let newAddress = formData.address;
+    let newPaymentMethod = formData.paymentMethod;
     if (shippingMethod === "EAT_IN" && tableNumber) {
       newAddress = `At restaurant table number ${tableNumber}`;
+      newPaymentMethod = `EAT_IN`;
+    } else if (shippingMethod === "GO_JEK") {
+      newPaymentMethod = `GO_JEK`;
+    } else if (shippingMethod === "FAST") {
+      newPaymentMethod = `FAST`;
     }
-  
+
     mutationUpdate?.mutate?.({
       ...formData,
       address: newAddress,
       shippingMethod,
-      paymentMethod,
-      isPaid
+      paymentMethod: newPaymentMethod,
+      isPaid,
     });
     handleClose();
   };
-  
 
   const handlePaypalSuccess = () => {
     setIsPaid(true);
@@ -99,19 +106,21 @@ const ModalShippingInfo = ({
         />
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={handleClose}
-        disabled={isPending}
-        style={{
-          opacity: isPending ? 0.5 : 1
-        }}
+        <Button
+          variant="secondary"
+          onClick={handleClose}
+          disabled={isPending}
+          style={{
+            opacity: isPending ? 0.5 : 1,
+          }}
         >
           Cancel
         </Button>
         <LoadingComponent isPending={isPending} />
-        <Button variant="primary"
-        onClick={isPending ? null : onSave}
-        disabled={isPending}
-        
+        <Button
+          variant="primary"
+          onClick={isPending ? null : onSave}
+          disabled={isPending}
         >
           OK
         </Button>

@@ -1,8 +1,9 @@
-import React from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const TypeProduct = ({ name, selectedType, onClick }) => {
   const navigate = useNavigate();
+  const [hovered, setHovered] = useState(false);
 
   const handleNavigateType = () => {
     const slug = name
@@ -16,17 +17,20 @@ const TypeProduct = ({ name, selectedType, onClick }) => {
   return (
     <div
       onClick={handleNavigateType}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       style={{
         padding: "10px 15px",
         marginBottom: "8px",
         borderRadius: "6px",
         cursor: "pointer",
-        hover: selectedType === name ? "#ffc107" : "#f8f9fa",
-        backgroundColor:'transparent',
+        backgroundColor: hovered ? "#f1f1f1" : "transparent",
+        color: hovered || selectedType === name ? "#d32f2f" : "#000",
         fontWeight: selectedType === name ? "bold" : "normal",
+        transition: "all 0.2s ease-in-out",
       }}
     >
-  {name}
+      {name}
     </div>
   );
 };

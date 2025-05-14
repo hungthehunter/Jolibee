@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 
@@ -10,10 +10,7 @@ import TypeProduct from "../../components/TypeProduct/TypeProduct";
 import * as ProductService from "../../services/ProductService";
 
 const decodeSlug = (slug) => {
-  return slug
-    .replace(/_/g, " ")
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "");
+  return slug.replace(/_/g, " ").normalize("NFD").replace(/[̀-ͯ]/g, "");
 };
 
 const renderRatingIcons = (rating) => {
@@ -44,7 +41,7 @@ const TypeProductPage = () => {
   const { data: products = [] } = useQuery({
     queryKey: ["products"],
     queryFn: async () => {
-      const res = await ProductService.getAllProduct();
+      const res = await ProductService.getAllProduct("", 1000, 0);
       return res.data;
     },
   });
@@ -62,6 +59,8 @@ const TypeProductPage = () => {
       image,
     }));
   }, [products]);
+
+
 
   useEffect(() => {
     if (type) {
@@ -128,15 +127,24 @@ const TypeProductPage = () => {
 
           <Row>
             <Col md={3}>
-              <h4 className="mb-3">Categories</h4>
-              {categories.map((cat) => (
-                <TypeProduct
-                  key={cat.id}
-                  name={cat.name}
-                  selectedType={selectedType}
-                  onClick={setSelectedType}
-                />
-              ))}
+              <div
+                style={{
+                  backgroundColor: "white",
+                  padding: "16px",
+                  borderRadius: "8px",
+                  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+                }}
+              >
+                <h4 className="mb-3">Categories</h4>
+                {categories.map((cat) => (
+                  <TypeProduct
+                    key={cat.id}
+                    name={cat.name}
+                    selectedType={selectedType}
+                    onClick={setSelectedType}
+                  />
+                ))}
+              </div>
             </Col>
 
             <Col md={9}>

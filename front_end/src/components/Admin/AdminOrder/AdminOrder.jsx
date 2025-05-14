@@ -1,7 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { BsPencilSquare, BsTrash } from "react-icons/bs";
+import { FaRegFileAlt } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import * as OrderService from "../../../services/OrderService";
 import DrawerComponent from "../../DrawerComponent/DrawerComponent";
@@ -12,9 +13,9 @@ import {
 } from "../../MessageComponent/MessageComponent";
 import ModalConfirmDelete from "../../ModalComponent/ModalConfirmDelete/ModalConfirmDelete";
 import NumericFilter from "../../NumericFilter/NumericFilter";
+import OrderDetailModal from "../../OrderDetailModal/OrderDetailModal";
 import OrderRevenueChart from "../../OrderRevenueChart/OrderRevenueChart";
 import TableComponent from "../../TableComponent/TableComponent";
-
 const AdminOrder = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredOrders, setFilteredOrders] = useState([]);
@@ -26,6 +27,8 @@ const AdminOrder = () => {
   const [orderToDelete, setOrderToDelete] = useState(null);
   const user = useSelector((state) => state.user);
   const queryClient = useQueryClient();
+  const [showModal, setShowModal] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
 
   const { data: orders, isPending } = useQuery({
     queryKey: ["orders"],
@@ -43,6 +46,12 @@ const AdminOrder = () => {
       setFormData(detailOrder.data);
     }
   }, [detailOrder]);
+
+  const handleViewDetail = async (orderId) => {
+    const res = await OrderService.getOrderById(orderId, user.access_token);
+    setSelectedOrder(res.data);
+    setShowModal(true);
+  };
 
   useEffect(() => {
     if (orders?.data) {
@@ -76,13 +85,18 @@ const AdminOrder = () => {
       toastSuccess("Cập nhật đơn hàng thành công!");
       setIsShowDrawer(false);
     },
-    onError: (error) => toastError("Cập nhật đơn hàng thất bại!",error.message),
+    onError: (error) =>
+      toastError("Cập nhật đơn hàng thất bại!", error.message),
     onSettled: () => queryClient.invalidateQueries({ queryKey: ["orders"] }),
   });
 
   const mutationDelete = useMutation({
     mutationFn: ({ id, access_token, orderItems }) => {
-      console.log("Deleting order with data:", { id, access_token, orderItems });
+      console.log("Deleting order with data:", {
+        id,
+        access_token,
+        orderItems,
+      });
       return OrderService.cancelOrder(id, access_token, orderItems);
     },
     onSuccess: () => {
@@ -92,7 +106,6 @@ const AdminOrder = () => {
     },
     onError: () => toastError("Xoá đơn hàng thất bại!"),
   });
-  
 
   const handleNumericFilter = (field) => (filter) => {
     setNumericFilters((prev) => ({
@@ -105,7 +118,7 @@ const AdminOrder = () => {
     mutationDelete.mutate({
       id: orderToDelete?._id,
       access_token: user?.access_token,
-      orderItems: orderToDelete?.orderItems
+      orderItems: orderToDelete?.orderItems,
     });
   };
 
@@ -149,9 +162,21 @@ const AdminOrder = () => {
     <>
       <Button
         size="sm"
+        variant="success"
+        className="me-2"
+        disabled={isPending}
+        onClick={() => {
+          handleViewDetail(order._id);
+        }}
+      >
+        <FaRegFileAlt />
+      </Button>
+
+      <Button
+        size="sm"
         variant="warning"
         className="me-2"
-        disabled= {isPending}
+        disabled={isPending}
         onClick={() => {
           setRowSelected(order._id);
           setIsShowDrawer(true);
@@ -162,7 +187,8 @@ const AdminOrder = () => {
       <Button
         size="sm"
         variant="danger"
-        disabled= {isPending}
+        className="me-2"
+        disabled={isPending}
         onClick={() => {
           setOrderToDelete(order);
           setShowDeleteModal(true);
@@ -184,7 +210,7 @@ const AdminOrder = () => {
         className="mb-3"
       />
 
-<OrderRevenueChart orders={filteredOrders} />
+      <OrderRevenueChart orders={filteredOrders} />
 
       <TableComponent
         products={filteredOrders}
@@ -256,6 +282,13 @@ const AdminOrder = () => {
         show={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}
         onConfirm={confirmDelete}
+      />
+
+      <OrderDetailModal
+        show={showModal}
+        onHide={() => setShowModal(false)}
+        orderData={selectedOrder}
+        isLoading={!selectedOrder}
       />
     </div>
   );

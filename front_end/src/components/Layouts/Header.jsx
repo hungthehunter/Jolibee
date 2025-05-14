@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Container, Nav, Navbar } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../assets/logo/logo.png";
+import { clearOrder } from "../../redux/slices/orderSlice";
 import { resetUser } from "../../redux/slices/userSlice";
 import * as UserService from "../../services/UserService";
 import "../../styles/HeaderStyle.css";
@@ -19,6 +20,7 @@ const Header = () => {
   const handleLogOut = async () => {
     setIsPending(true);
     await UserService.logoutUser();
+    dispatch(clearOrder())
     dispatch(resetUser());
     setIsPending(false);
   };

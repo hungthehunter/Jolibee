@@ -1,4 +1,3 @@
-import React from "react";
 import { Carousel, Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Brand1 from "../../assets/brands/brand-11.png";
@@ -12,8 +11,11 @@ import Brand8 from "../../assets/brands/brand-18.png";
 import StoreIOS from "../../assets/shop/appstore.png";
 import DownloadImage from "../../assets/shop/e-shop.png";
 import StoreGoogle from "../../assets/shop/googleplay.png";
-
+import * as Message from "../../components/MessageComponent/MessageComponent";
 function Section5() {
+  const handleInformNotification = () =>{
+Message.toastWarning("This feature is not available yet 🥺")
+  }
   return (
     <>
       <section className="shop_section">
@@ -25,14 +27,14 @@ function Section5() {
               <p>
               Get exclusive discounts and seamless ordering with our mobile app! Enjoy fast access to deals, easy navigation, and a smooth checkout experience—all while saving up to 20% on your favorite items. Convenience and savings, right at your fingertips
               </p>
-              <Link to="/">
+              <Link onClick={handleInformNotification} to="/">
                 <img
                   src={StoreIOS}
                   alt="IOS"
                   className="img-fluid store me-3"
                 />
               </Link>
-              <Link to="/">
+              <Link onClick={handleInformNotification} to="/">
                 <img
                   src={StoreGoogle}
                   alt="Android"

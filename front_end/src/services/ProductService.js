@@ -66,7 +66,6 @@ export const getAllType = async () => {
 };
 
 export const getAllProduct = async (search, limit, page) => {
-  console.log('limit',limit)
   const filter = search?.length > 0 ? JSON.stringify(['type', search]) : null;
   const res = await axios.get(
     `${import.meta.env.VITE_API_URL_BACKEND}/product/get-all`,

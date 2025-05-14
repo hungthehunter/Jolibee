@@ -58,8 +58,6 @@ export const orderSlice = createSlice({
       } else {
         state.selectedItemOrders.push(productId);
       }
-
-      console.log("Updated selectedItemOrders:", state.selectedItemOrders);
     },
     removeSelectedOrders: (state) => {
       state.orderItems = state.orderItems.filter(

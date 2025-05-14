@@ -1,11 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import React, {
+import {
   useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
+  useEffect, useMemo, useRef,
+  useState
 } from "react";
 import {
   Button,
@@ -24,6 +22,7 @@ import * as Message from "../../components/MessageComponent/MessageComponent";
 import ModalShippingInfo from "../../components/ModalComponent/ModalShippingInfo/ModalShippingInfo";
 import ShippingProgressBar from "../../components/ShippingProgressBar/ShippingProgressBar";
 import {
+  clearOrder,
   decreaseAmount,
   increaseAmount,
   removeOrderProduct,
@@ -45,11 +44,20 @@ const OrderPage = () => {
   const [showShippingModal, setShowShippingModal] = useState(false);
   const isMounted = useRef(true);
 
+
+const handleShowShippingModal = () => {
+  if(user === null){
+    Message.toastWarning("Vui lòng đăng nhập để đặt hàng");
+    navigate("/login");
+    return;
+  }
+    setShowShippingModal(true);
+}
+
   const mutationAddOrder = useMutation({
     mutationFn: async (input) => {
       try {
         const res = await OrderService.createOrder(input.data, input.access_token);
-        console.log("🟢 API Response:", res); // Check the full response
         return res?.data; // Ensure res.data exists
       } catch (error) {
         console.error("🛑 Error calling createOrder:", error);
@@ -57,9 +65,9 @@ const OrderPage = () => {
       }
     },
     onSuccess: (data) => {
-      // Check if data is available
       if (data) {
         Message.toastSuccess("Đặt hàng thành công");
+dispatch(clearOrder())
         navigate("/order-success", { state: { orderData: data } });
       } else {
         Message.toastError("❌ Lỗi: Không có dữ liệu đơn hàng");
@@ -90,63 +98,72 @@ const OrderPage = () => {
     },
   });
 
-  const handleAddOrder = (shippingInfo) => {
-    const missingFields = [];
+const handleAddOrder = (shippingInfo) => {
+  const missingFields = [];
 
-    if (!user?.access_token) missingFields.push("token người dùng");
-    if (!user?.id) missingFields.push("ID người dùng");
-    if (!user?.name) missingFields.push("họ tên");
-    if (!user?.address && !shippingInfo?.address) missingFields.push("địa chỉ");
-    if (!user?.phone && !shippingInfo?.phone)
-      missingFields.push("số điện thoại");
-    if (!user?.city && !shippingInfo?.city) missingFields.push("thành phố");
-    if (!summary?.total) missingFields.push("tổng tiền");
-    if (!order?.orderItems?.length) missingFields.push("sản phẩm đã chọn");
+  if (!user?.access_token) missingFields.push("token người dùng");
+  if (!user?.id) missingFields.push("ID người dùng");
+  if (!user?.name) missingFields.push("họ tên");
+  if (!user?.address && !shippingInfo?.address) missingFields.push("địa chỉ");
+  if (!user?.phone && !shippingInfo?.phone) missingFields.push("số điện thoại");
+  if (!user?.city && !shippingInfo?.city) missingFields.push("thành phố");
+  if (!order?.orderItems?.length) missingFields.push("sản phẩm đã chọn");
 
-    // Kiểm tra các trường khác như shippingPrice, itemPrice, taxPrice, totalPrice
-    if (
-      summary?.shippingPrice === undefined ||
-      summary?.shippingPrice === null
-    ) {
-      missingFields.push("giá vận chuyển");
-    }
-    if (summary?.itemPrice === undefined || summary?.itemPrice === null) {
-      missingFields.push("giá sản phẩm");
-    }
+  // 👉 Tính toán giá đơn hàng
+  let subtotal = 0;
+  let totalDiscount = 0;
 
-    if (missingFields.length > 0) {
-      Message.toastWarning(
-        `Vui lòng cung cấp các thông tin sau: ${missingFields.join(", ")}`
-      );
-      return;
-    }
+  order?.orderItems?.forEach(item => {
+    const pct = Math.min(Math.max(item.discount || 0, 0), 100) / 100;
+    const before = item.price * item.amount;
+    const after  = item.price * (1 - pct) * item.amount;
 
-    const access_token = user?.access_token;
+    subtotal      += after;
+    totalDiscount += (before - after);
+  });
 
-    const shippingAddress = {
-      fullname: user.name,
-      address: shippingInfo?.address || user.address,
-      city: shippingInfo?.city || user.city,
-      country: "Việt Nam",
-      phone: shippingInfo?.phone || user.phone,
-    };
+  // 👉 Miễn phí vận chuyển nếu tổng > 100 hoặc phương thức là "EAT_IN"
+  const isEatIn = shippingInfo?.paymentMethod === "EAT_IN";
+  const shippingPrice = subtotal > 100 || isEatIn ? 0 : 20;
+  const tax = subtotal * 0.1;
+  const total = subtotal + shippingPrice + tax;
 
-    const orderData = {
-      orderItems: order.orderItems,
-      shippingAddress,
-      paymentMethod: shippingInfo?.payment || "Thanh toán khi nhận hàng",
-      itemPrice: summary.itemPrice,
-      shippingPrice:summary?.shippingPrice !== undefined ? summary?.shippingPrice : 0, 
-      taxPrice: summary.tax || 0, 
-      totalPrice: summary.total,
-      user: user.id,
-      isPaid: shippingInfo.isPaid,
-    };
+  // Kiểm tra giá trị sau tính
+  if (!total) missingFields.push("tổng tiền");
+  if (shippingPrice === undefined || shippingPrice === null) missingFields.push("giá vận chuyển");
+  if (subtotal === undefined || subtotal === null) missingFields.push("giá sản phẩm");
 
-console.log('orderData',orderData)
+  if (missingFields.length > 0) {
+    Message.toastWarning(
+      `Vui lòng cung cấp các thông tin sau: ${missingFields.join(", ")}`
+    );
+    return;
+  }
 
-    mutationAddOrder.mutate({ data: orderData, access_token });
-  };
+  const access_token = user?.access_token;
+
+  const shippingAddress = {
+    fullname: user.name,
+    address: shippingInfo?.address || user.address,
+    city: shippingInfo?.city || user.city,
+    country: "Việt Nam",
+    phone: shippingInfo?.phone || user.phone,
+  };
+
+  const orderData = {
+    orderItems: order.orderItems,
+    shippingAddress,
+    paymentMethod: shippingInfo?.paymentMethod || "Thanh toán khi nhận hàng",
+    itemPrice: parseFloat(subtotal.toFixed(2)),
+    shippingPrice: parseFloat(shippingPrice.toFixed(2)),
+    taxPrice: parseFloat(tax.toFixed(2)),
+    totalPrice: parseFloat(total.toFixed(2)),
+    user: user.id,
+    isPaid: shippingInfo?.isPaid || false,
+  };
+
+  mutationAddOrder.mutate({ data: orderData, access_token });
+};
 
   const handleGetDetailUser = async (id, token) => {
     try {
@@ -200,8 +217,8 @@ Message.toastWarning('At least 1 product available')
   );
 
 const summary = useMemo(() => {
-  let subtotal = 0;      // tổng tiền sau giảm
-  let totalDiscount = 0; // tổng số tiền giảm
+  let subtotal = 0;      
+  let totalDiscount = 0; 
 
   order?.orderItems?.forEach(item => {
     const pct = Math.min(Math.max(item.discount || 0, 0), 100) / 100;
@@ -213,17 +230,19 @@ const summary = useMemo(() => {
   });
 
   // phí vận chuyển: miễn phí nếu > 100, còn lại $20
-  const shippingPrice = subtotal > 100 ? 0 : 20;
+  // const shippingPrice = subtotal > 100 ? 0 : 20;
 
   // thuế 10%
   const tax = subtotal * 0.1;
 
-  const total = subtotal + shippingPrice + tax;
+  const total = subtotal + tax;
+
+  // + shippingPrice;
 
   return {
     itemPrice:     parseFloat(subtotal.toFixed(2)),
     discount:      parseFloat(totalDiscount.toFixed(2)),
-    shippingPrice: parseFloat(shippingPrice.toFixed(2)),
+    // shippingPrice: parseFloat(shippingPrice.toFixed(2)),
     tax:           parseFloat(tax.toFixed(2)),
     total:         parseFloat(total.toFixed(2)),
   };
@@ -409,13 +428,13 @@ const summary = useMemo(() => {
                   </div>
 
                   <div className="d-flex justify-content-between mb-3">
-                    <span>Phí giao hàng</span>
-                    <span>
+                     <span>Phí giao hàng (the default price is 20$ if you eat in it would be 0$)</span>
+{/*                     <span>
                       {summary?.shippingPrice?.toLocaleString("en-US", {
                         style: "currency",
                         currency: "USD",
                       })}
-                    </span>
+                    </span> */}
                   </div>
 
                   <hr />
@@ -437,7 +456,7 @@ const summary = useMemo(() => {
                   <Button
                     className="w-100 mt-2 fw-bold"
                     variant="danger"
-                    onClick={() => setShowShippingModal(true)}
+                    onClick={() => handleShowShippingModal()}
                   >
                     Mua hàng
                   </Button>
@@ -447,9 +466,7 @@ const summary = useMemo(() => {
 <OrderContext.Provider value={{ totalPrice: summary.total}} >
             <ModalShippingInfo
               show={showShippingModal}
-              handleClose={() => {
-                if (isMounted.current) setShowShippingModal(false);
-              }}
+              handleClose={() => setShowShippingModal(false)}
               userInfo={user}
               mutationUpdate={{
                 mutate: handleAddOrder,
