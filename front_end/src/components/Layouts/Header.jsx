@@ -20,6 +20,8 @@ const Header = () => {
   const handleLogOut = async () => {
     setIsPending(true);
     await UserService.logoutUser();
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
     dispatch(clearOrder())
     dispatch(resetUser());
     setIsPending(false);
