@@ -147,10 +147,10 @@ const updateUser = (id, data) => {
   });
 };
 
-const updateNewPasswordUser = (id, data) => {
+const updateNewPasswordUser = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const checkUser = await User.findOne({ _id: id });
+      const checkUser = await User.findOne({ email: data.email });
 
       if (checkUser === null) {
         resolve({
@@ -165,7 +165,7 @@ const updateNewPasswordUser = (id, data) => {
           password: hashedPassword, // Ghi đè password mới đã hash
         };
 
-        const updateUserNewPassword = await User.findByIdAndUpdate(id, updateData, {
+        const updateUserNewPassword = await User.findByIdAndUpdate(checkUser._id, updateData, {
           new: true,
         });
 

@@ -101,11 +101,9 @@ const loginUser = async (req, res) => {
 
 const updateUserNewPassword = async (req, res) => {
   try {
-    const id = req.params.id;
     const { email, password, confirmPassword } = req.body;
     const reg = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const isCheckEmail = reg.test(email);
-    console.log("information đây này: ", email, password, confirmPassword,id);
     if (!email || !password || !confirmPassword) {
       return res
         .status(200)
@@ -127,7 +125,7 @@ const updateUserNewPassword = async (req, res) => {
       confirmPassword,
     };
 
-    const response = await UserService.updateNewPasswordUser(id, data);
+    const response = await UserService.updateNewPasswordUser(data);
     return res.status(200).json(response);
   } catch (error) {
     return res.status(404).json({ message: error.message });

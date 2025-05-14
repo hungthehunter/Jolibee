@@ -1,4 +1,3 @@
-import { jwtDecode } from "jwt-decode";
 import { useEffect, useState } from "react";
 import { Image } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
@@ -20,39 +19,23 @@ function ForgotPage() {
   const navigate = useNavigate();
 
   const mutation = useMutationHook((data) =>
-    UserService.updateNewPasswordUser(data.id, data.formData, data.access_token)
+    UserService.updateNewPasswordUser(data.formData)
   );
 
   const { data, isPending, isSuccess, isError } = mutation;
 
   const handleChangePassword = () => {
-    const access_token = JSON.parse(localStorage.getItem("access_token"));
-    if (!access_token) {
-      Message.toastError("You must be logged in to change password.");
-      return;
-    }
-
-    const decoded = jwtDecode(access_token);
-    const id = decoded?.id;
-
-    if (!id) {
-      Message.toastError("Invalid token.");
-      return;
-    }
-
     if (password !== confirmPassword) {
       Message.toastError("Passwords do not match.");
       return;
     }
     
     mutation.mutate({
-      id,
       formData: {
         email: email,
         password: password,
         confirmPassword: confirmPassword,
       },
-      access_token,
     });
   };
 

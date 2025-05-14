@@ -9,7 +9,7 @@ router.post('/create-user',uploadCloud.single('avatar'),userController.createUse
 router.post('/sign-in',userController.loginUser)
 router.post('/log-out',userController.logoutUser)
 router.put('/update-user/:id',authUserMiddleware,uploadCloud.single('avatar'),userController.updateUser)
-router.put('/update-password-user/:id',authUserMiddleware,userController.updateUserNewPassword)
+router.put('/update-password-user',userController.updateUserNewPassword)
 router.delete('/delete-user/:id',authMiddleware,userController.deleteUser)
 router.get('/get-all',authMiddleware,userController.getAllUser);
 router.get('/get-details/:id',authUserMiddleware,userController.getDetailUser);
