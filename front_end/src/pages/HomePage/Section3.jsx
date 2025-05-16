@@ -73,28 +73,39 @@ function Section3() {
   }, []);
 
   // Fetch all products with search + limit
-  const {
-    data: products = [],
-    isLoading: loadingProducts,
-  } = useQuery({
+  const { data: products = [], isLoading: loadingProducts } = useQuery({
     queryKey: ["products", debouncedSearch, visibleCount],
     queryFn: async () => {
-      const res = await ProductService.getAllProduct(debouncedSearch, visibleCount);
-      return res.data;
+      if (debouncedSearch.trim()) {
+        const res = await ProductService.getAllProduct(
+          debouncedSearch,
+          1000,
+          0
+        );
+        return res.data;
+      } else {
+        const res = await ProductService.getAllProduct("", visibleCount, 0);
+        return res.data;
+      }
     },
     keepPreviousData: true,
     retry: 3,
     retryDelay: 1000,
   });
 
-
-  useEffect(()=>{
-    console.log(products)
-},[])
+  const { data: allProductsForCategories = [], isLoading: loadingAllProducts } =
+    useQuery({
+      queryKey: ["all-products-for-categories"],
+      queryFn: async () => {
+        const res = await ProductService.getAllProduct("", 1000, 0);
+        return res.data;
+      },
+      staleTime: 5 * 60 * 1000, // Optional: Cache trong 5 phút
+    });
 
   const categories = useMemo(() => {
     const map = new Map();
-    products.forEach((p) => {
+    allProductsForCategories.forEach((p) => {
       if (!map.has(p.type)) {
         map.set(p.type, p.image);
       }
@@ -104,16 +115,23 @@ function Section3() {
       name: type,
       image,
     }));
-  }, [products]);
+  }, [allProductsForCategories]);
+
+  const filteredProducts = useMemo(() => {
+    let result = products;
+    if (searchTerm.trim() !== "") {
+      result = result.filter((p) =>
+        p.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    return result;
+  }, [products, searchTerm]);
 
   // Handlers
   const handleCardClick = (product) => {
     setSelectedProduct(product);
     setShowModal(true);
   };
-
-  const handleSearchChange = (e) => setSearchTerm(e.target.value);
-
   const handleLoadMore = () => setVisibleCount((c) => c + itemsPerLoad);
 
   return (
@@ -149,14 +167,14 @@ function Section3() {
                 textButton="Searching"
                 colorButton="#F27B01"
                 value={searchTerm}
-                onChange={handleSearchChange}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
             </Col>
           </Row>
 
           {/* Product Cards */}
           <Row>
-            {products.map((prod, idx) => (
+            {filteredProducts.map((prod, idx) => (
               <Cards
                 key={idx}
                 image={prod.image}
@@ -173,7 +191,7 @@ function Section3() {
           </Row>
 
           {/* Load More */}
-          {products.length >= visibleCount && (
+          {filteredProducts.length >= visibleCount && (
             <Row className="mt-4">
               <Col className="text-center">
                 <button
@@ -193,7 +211,7 @@ function Section3() {
               <div className="ads_box ads_img1 mb-5 mb-md-0">
                 <h4 className="mb-0">GET YOUR FREE</h4>
                 <h5>CHEESE FRIES</h5>
-                <Link to="/menu/Fresh_French" className="btn btn_red px-4 rounded-0">
+                <Link to="/" className="btn btn_red px-4 rounded-0">
                   Learn More
                 </Link>
               </div>
@@ -202,7 +220,7 @@ function Section3() {
               <div className="ads_box ads_img2">
                 <h4 className="mb-0">GET YOUR FREE</h4>
                 <h5>CHEESE FRIES</h5>
-                <Link to="/menu/Hambuger" className="btn btn_red px-4 rounded-0">
+                <Link to="/" className="btn btn_red px-4 rounded-0">
                   Learn More
                 </Link>
               </div>

@@ -43,13 +43,8 @@ const authUserMiddleware = (req, res, next) => {
     }
 
     if (user?.isAdmin || user?.id === userId) {
-         console.log("Token payload:", user);
-      console.log("User ID in URL:", userId);
       next();
     } else {
-      console.log("Token payload:", user);
-      console.log("User ID in URL:", userId);
-
       return res.status(403).json({
         status: "ERR",
         message: "User is not authorized",
