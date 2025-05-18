@@ -8,6 +8,7 @@ import { resetUser } from "../../redux/slices/userSlice";
 import * as UserService from "../../services/UserService";
 import "../../styles/HeaderStyle.css";
 import LoadingComponent from "../LoadingComponent/LoadingComponent";
+import * as Message from "../MessageComponent/MessageComponent";
 import PopoverComponent from "../PopoverComponent/PopoverComponent";
 const Header = () => {
   const [nav, setNav] = useState(false);
@@ -20,9 +21,9 @@ const Header = () => {
   const handleLogOut = async () => {
     setIsPending(true);
     await UserService.logoutUser();
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    dispatch(clearOrder())
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    dispatch(clearOrder());
     dispatch(resetUser());
     setIsPending(false);
   };
@@ -34,7 +35,11 @@ const Header = () => {
   }, [user?.name]);
 
   const handleDetailUser = () => {
-    navigate("/profile");
+    if (user === null) {
+      Message.toastError("Please login to view your profile");
+    } else {
+      navigate("/profile");
+    }
   };
 
   const handleSystemAdmin = () => {
@@ -49,13 +54,18 @@ const Header = () => {
     navigate("/menu");
   };
 
-  const handleMyOrder=() =>{
-    navigate('/my-order',{state:{
-      id: user?.id,
-      token: user?.access_token
-    }})
-  }
+  const handleNavigateSignIn = () => {
+    navigate("/sign-in");
+  };
 
+  const handleMyOrder = () => {
+    navigate("/my-order", {
+      state: {
+        id: user?.id,
+        token: user?.access_token,
+      },
+    });
+  };
 
   const content = () => (
     <>
@@ -70,7 +80,7 @@ const Header = () => {
           Admin system information
         </p>
       )}
-        <p className="popover-content" onClick={handleMyOrder}>
+      <p className="popover-content" onClick={handleMyOrder}>
         My order
       </p>
     </>
@@ -81,8 +91,8 @@ const Header = () => {
   };
 
   const handleToHome = () => {
-    navigate("/")
-  }
+    navigate("/");
+  };
   // Scroll Navbar
   const changeValueOnScroll = () => {
     const scrollValue = document?.documentElement?.scrollTop;
@@ -99,7 +109,12 @@ const Header = () => {
         className={`${nav === true ? "sticky" : ""}`}
       >
         <Container>
-          <Navbar.Brand as={Link} onClick={handleToHome} href="#home" className="logo">
+          <Navbar.Brand
+            as={Link}
+            onClick={handleToHome}
+            href="#home"
+            className="logo"
+          >
             <img src={Logo} alt="Logo" className="img-fluid" />
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -109,28 +124,29 @@ const Header = () => {
                 Home
               </Nav.Link>
               <LoadingComponent isPending={isPending} delay={200} />
-              <div>
-                {user?.access_token ? (
-                  <PopoverComponent content={content}>
+
+              {user?.access_token ? (
+                <PopoverComponent content={content}>
+                  <Nav className="ms-auto">
                     <Nav.Link style={{ cursor: "pointer" }}>
                       Welcome {userName.length ? userName : user?.email}
                     </Nav.Link>
-                  </PopoverComponent>
-                ) : (
-                  <Nav.Link
-                    onClick={handleNavigateLogin}
-                    style={{ cursor: "pointer" }}
-                  >
-                    Login / Register
-                  </Nav.Link>
-                )}
-              </div>
+                  </Nav>
+                </PopoverComponent>
+              ) : (
+                <Nav.Link
+                  onClick={handleNavigateLogin}
+                  style={{ cursor: "pointer" }}
+                >
+                  Login / Register
+                </Nav.Link>
+              )}
 
               <Nav.Link onClick={handleMenuPage} style={{ cursor: "pointer" }}>
                 Our Menu
               </Nav.Link>
 
-              <Nav.Link   style={{ cursor: "pointer" }}  onClick={handleOrderPage}>
+              <Nav.Link style={{ cursor: "pointer" }} onClick={handleOrderPage}>
                 <div className="cart">
                   <i className="bi bi-bag fs-5"></i>
                   <em className="roundpoint">{order?.orderItems?.length}</em>

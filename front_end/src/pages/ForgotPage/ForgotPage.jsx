@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Image } from "react-bootstrap";
+import { Col, Container, Image, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Burger_14 from "../../assets/menu/burger-14.jpg";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent/ButtonComponent";
@@ -29,12 +29,12 @@ function ForgotPage() {
       Message.toastError("Passwords do not match.");
       return;
     }
-    
+
     mutation.mutate({
       formData: {
-        email: email,
-        password: password,
-        confirmPassword: confirmPassword,
+        email,
+        password,
+        confirmPassword,
       },
     });
   };
@@ -57,42 +57,23 @@ function ForgotPage() {
   };
 
   return (
-    <div className="WrapperContainer">
-      <div
-        style={{
-          display: "flex",
-          width: "100%",
-          height: "100vh",
-          borderRadius: "6px",
-          backgroundColor: "#fff",
-        }}
-      >
-        <div className="WrapperContainerLeft">
-          <h1
-            style={{
-              fontSize: "2.5rem",
-              fontWeight: "bold",
-              color: "#F27B01",
-              paddingTop: "2rem",
-            }}
-          >
+    <Container fluid className="min-vh-100 d-flex align-items-center bg-white">
+      <Row className="w-100">
+        {/* Left section */}
+        <Col
+          xs={12}
+          md={6}
+          className="d-flex flex-column justify-content-center p-4"
+        >
+          <h1 className="text-warning fw-bold mb-3">
             Welcome to Tasty Burger 🍔
           </h1>
-          <p
-            style={{
-              fontSize: "1.5rem",
-              fontWeight: "bold",
-              color: "#FF6347",
-              paddingTop: "2rem",
-              marginBottom: "2rem",
-            }}
-          >
+          <p className="text-danger fs-5 fw-bold mb-4">
             Change your password 🔐
           </p>
 
           <InputForm
             type="text"
-            size={500}
             placeholder="Enter your email ..."
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -104,7 +85,7 @@ function ForgotPage() {
             }}
           />
 
-          <div style={{ position: "relative", marginTop: "1rem" }}>
+          <div className="position-relative mt-3">
             <InputForm
               type={isShowPassword ? "text" : "password"}
               placeholder="Enter your new password ..."
@@ -112,13 +93,8 @@ function ForgotPage() {
               onChange={(e) => setPassword(e.target.value)}
             />
             <span
-              style={{
-                zIndex: 10,
-                position: "absolute",
-                top: "8px",
-                right: "10px",
-                cursor: "pointer",
-              }}
+              className="position-absolute top-50 end-0 translate-middle-y me-3"
+              style={{ cursor: "pointer", zIndex: 10 }}
               onClick={() => setIsShowPassword(!isShowPassword)}
             >
               {isShowPassword ? (
@@ -129,7 +105,7 @@ function ForgotPage() {
             </span>
           </div>
 
-          <div style={{ marginTop: "1rem" }}>
+          <div className="mt-3">
             <InputForm
               type={isShowPassword ? "text" : "password"}
               placeholder="Confirm your new password ..."
@@ -163,32 +139,29 @@ function ForgotPage() {
             }}
           />
 
-          <p style={{ fontSize: "16px", marginTop: "1rem" }}>
+          <p className="mt-3 fs-6">
             Don't have an account?{" "}
             <span
-              className="WrapperTextLight"
+              className="text-primary"
               onClick={handleNavigateSignUp}
-              style={{ cursor: "pointer", color: "#007bff" }}
+              style={{ cursor: "pointer" }}
             >
               Sign up now
             </span>
           </p>
-        </div>
+        </Col>
 
-        <div className="WrapperContainerRight">
+        {/* Right section */}
+        <Col xs={12} md={6} className="d-none d-md-block p-0">
           <Image
             src={Burger_14}
             alt="Burger-logo"
-            style={{
-              width: "100%",
-              height: "100%",
-              borderRadius: "6px",
-              objectFit: "cover",
-            }}
+            fluid
+            className="h-100 w-100 object-fit-cover rounded-0"
           />
-        </div>
-      </div>
-    </div>
+        </Col>
+      </Row>
+    </Container>
   );
 }
 

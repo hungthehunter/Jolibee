@@ -1,5 +1,5 @@
 import { QRCodeSVG } from 'qrcode.react';
-import React, { useState } from "react";
+import { useState } from "react";
 
 const AdminGenerateQR = () => {
   const [tableNumber, setTableNumber] = useState(1);
@@ -12,10 +12,10 @@ const AdminGenerateQR = () => {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Tạo mã QR cho bàn ăn</h1>
+      <h1 className="text-2xl font-bold mb-4">Create QR on table</h1>
 
       <div className="flex items-center gap-4 mb-6">
-        <label className="font-semibold">Chọn số bàn:</label>
+        <label className="font-semibold">Choose table number:</label>
         <input
           type="number"
           min={1}
@@ -28,7 +28,7 @@ const AdminGenerateQR = () => {
 
       <div className="flex flex-col items-center">
         <QRCodeSVG value={url} size={200} />
-        <p className="mt-4 text-blue-600">{url}</p>
+        <p className="mt-4 text-blue-600">Link test: {url}</p>
       </div>
     </div>
   );

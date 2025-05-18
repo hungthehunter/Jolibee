@@ -1,10 +1,10 @@
 import {
-    Button,
-    Card,
-    Col,
-    Modal,
-    Row,
-    Spinner,
+  Button,
+  Card,
+  Col,
+  Modal,
+  Row,
+  Spinner,
 } from "react-bootstrap";
 
 const OrderDetailModal = ({ show, onHide, orderData, isLoading }) => {
@@ -36,51 +36,51 @@ const OrderDetailModal = ({ show, onHide, orderData, isLoading }) => {
   return (
     <Modal show={show} onHide={onHide} size="lg" centered scrollable>
       <Modal.Header closeButton>
-        <Modal.Title>🎉 Chi tiết đơn hàng</Modal.Title>
+        <Modal.Title>🎉 Detail order</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Card className="p-3 shadow-sm">
-          <h5 className="mb-3">📦 Thông tin giao hàng:</h5>
+          <h5 className="mb-3">📦 Shipping information:</h5>
           <p>
-            <strong>Người nhận:</strong> {shippingAddress?.fullname}
+            <strong>Recipient:</strong> {shippingAddress?.fullname}
           </p>
           <p>
-            <strong>Địa chỉ:</strong> {shippingAddress?.address},{" "}
+            <strong>Address:</strong> {shippingAddress?.address},{" "}
             {shippingAddress?.city}, {shippingAddress?.country}
           </p>
           <p>
-            <strong>SĐT:</strong> {shippingAddress?.phone}
+            <strong>Phone number:</strong> {shippingAddress?.phone}
           </p>
           <p>
-            <strong>Phương thức thanh toán:</strong> {paymentMethod}
+            <strong>Payment method:</strong> {paymentMethod}
           </p>
           <p>
-            <strong>Phí vận chuyển:</strong>{" "}
+            <strong>Shipping fee:</strong>{" "}
             {shippingPrice.toLocaleString("en-US", {
               style: "currency",
               currency: "USD",
             })}
           </p>
           <p>
-            <strong>Giao hàng:</strong>{" "}
+            <strong>Delivery:</strong>{" "}
             {isDelivered ? (
-              <span className="text-success">Đã giao</span>
+              <span className="text-success">Delivered</span>
             ) : (
-              <span className="text-warning">Chưa giao</span>
+              <span className="text-warning">Not Delivered</span>
             )}
           </p>
           <p>
-            <strong>Thanh toán:</strong>{" "}
+            <strong>Payment:</strong>{" "}
             {isPaid ? (
-              <span className="text-success">Đã thanh toán</span>
+              <span className="text-success">Paid</span>
             ) : (
-              <span className="text-danger">Chưa thanh toán</span>
+              <span className="text-danger">Not Paid</span>
             )}
           </p>
 
           <hr />
 
-          <h5 className="mt-4">🛒 Sản phẩm đã mua:</h5>
+          <h5 className="mt-4">🛒 Product Buyed:</h5>
           {orderItems?.map((item, idx) => {
             const originalPrice = item.price;
             const discount = item?.product?.discount || 0;
@@ -115,10 +115,10 @@ const OrderDetailModal = ({ show, onHide, orderData, isLoading }) => {
                       </s>
                     </div>
                     <div>
-                      Giảm giá: <span className="text-danger">{discount}%</span>
+                      Discount: <span className="text-danger">{discount}%</span>
                     </div>
                     <div>
-                      Giá sau giảm:{" "}
+                      Price after discount:{" "}
                       <span className="text-success">
                         {discountedPrice.toLocaleString("en-US", {
                           style: "currency",
@@ -129,7 +129,7 @@ const OrderDetailModal = ({ show, onHide, orderData, isLoading }) => {
                   </Col>
                   <Col md={2}>SL: {item?.amount}</Col>
                   <Col md={2}>
-                    Tổng:{" "}
+                    Total :{" "}
                     <strong>
                       {totalItemPrice.toLocaleString("en-US", {
                         style: "currency",
@@ -143,7 +143,7 @@ const OrderDetailModal = ({ show, onHide, orderData, isLoading }) => {
           })}
 
           <h5 className="text-end mt-4">
-            Tổng tiền:{" "}
+            Total amount:{" "}
             <strong>
               {totalPrice?.toLocaleString("en-US", {
                 style: "currency",
@@ -155,7 +155,7 @@ const OrderDetailModal = ({ show, onHide, orderData, isLoading }) => {
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={onHide}>
-          Đóng
+          Close
         </Button>
       </Modal.Footer>
     </Modal>

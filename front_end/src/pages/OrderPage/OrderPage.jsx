@@ -263,12 +263,12 @@ const summary = useMemo(() => {
 
               <Col md={9}>
                 <div className="border p-4 rounded bg-white shadow-sm mb-3">
-                  <h4 className="mb-4 fw-bold">Giỏ hàng</h4>
+                  <h4 className="mb-4 fw-bold">Shopping Cart</h4>
                   <Row className="align-items-center fw-semibold text-secondary border-bottom pb-2 mb-3">
                     <Col xs={6}>
                       <Form.Check
                         type="checkbox"
-                        label={`Tất cả (${order?.orderItems?.length} sản phẩm)`}
+                        label={`Total (${order?.orderItems?.length} products)`}
                         onChange={handleCheckAllOrders}
                         checked={
                           order?.selectedItemOrders?.length > 0 &&
@@ -277,9 +277,9 @@ const summary = useMemo(() => {
                         }
                       />
                     </Col>
-                    <Col className="text-center">Đơn giá</Col>
-                    <Col className="text-center">Số lượng</Col>
-                    <Col className="text-center">Thành tiền</Col>
+                    <Col className="text-center">Unit Price</Col>
+                    <Col className="text-center">Quantity</Col>
+                    <Col className="text-center">Total Amount</Col>
                     <Col className="text-center">Discount</Col>
                     <Col className="text-center">
                       {order?.selectedItemOrders?.length > 0 && (
@@ -288,7 +288,7 @@ const summary = useMemo(() => {
                           onClick={handleDeleteSelectedOrders}
                           className="ms-3"
                         >
-                          <i className="bi bi-trash3"></i> Xóa đã chọn
+                          <i className="bi bi-trash3"></i> Deleted selected
                         </Button>
                       )}
                     </Col>
@@ -377,7 +377,7 @@ const summary = useMemo(() => {
                           <Col xs={1} className="text-center text-muted">
                             <OverlayTrigger
                               placement="top"
-                              overlay={<Tooltip>Xoá sản phẩm</Tooltip>}
+                              overlay={<Tooltip>Delete product</Tooltip>}
                             >
                               <i
                                 className="bi bi-trash fs-5 hover-opacity"
@@ -395,10 +395,10 @@ const summary = useMemo(() => {
 
               <Col md={3}>
                 <div className="border p-4 rounded bg-white shadow w-100">
-                  <h6 className="fw-bold mb-3">Tóm tắt đơn hàng</h6>
+                  <h6 className="fw-bold mb-3">Order summary </h6>
 
                   <div className="d-flex justify-content-between mb-2">
-                    <span>Tạm tính</span>
+                    <span>Temporary calculation</span>
                     <span>
                       {summary?.itemPrice?.toLocaleString("en-US", {
                         style: "currency",
@@ -408,7 +408,7 @@ const summary = useMemo(() => {
                   </div>
 
                   <div className="d-flex justify-content-between mb-2">
-                    <span>Giảm giá</span>
+                    <span>Discount</span>
                     <span>
                       {summary?.discount?.toLocaleString("en-US", {
                         style: "currency",
@@ -418,7 +418,7 @@ const summary = useMemo(() => {
                   </div>
 
                   <div className="d-flex justify-content-between mb-2">
-                    <span>Thuế</span>
+                    <span>Tax</span>
                     <span>
                       {summary?.tax?.toLocaleString("en-US", {
                         style: "currency",
@@ -428,7 +428,7 @@ const summary = useMemo(() => {
                   </div>
 
                   <div className="d-flex justify-content-between mb-3">
-                     <span>Phí giao hàng (the default price is 20$ if you eat in it would be 0$)</span>
+                     <span>Shipping fee (the default price is 20$ if you eat in it would be 0$)</span>
 {/*                     <span>
                       {summary?.shippingPrice?.toLocaleString("en-US", {
                         style: "currency",
@@ -440,7 +440,7 @@ const summary = useMemo(() => {
                   <hr />
 
                   <div className="d-flex justify-content-between align-items-center">
-                    <h5 className="m-0">Tổng tiền</h5>
+                    <h5 className="m-0">Total amount</h5>
                     <h4 className="text-danger m-0">
                       {summary?.total?.toLocaleString("en-US", {
                         style: "currency",
@@ -450,7 +450,7 @@ const summary = useMemo(() => {
                   </div>
 
                   <div className="text-muted small mt-1 mb-3">
-                    (Đã bao gồm VAT nếu có)
+                    (Include VAT if available)
                   </div>
 
                   <Button
@@ -458,7 +458,7 @@ const summary = useMemo(() => {
                     variant="danger"
                     onClick={() => handleShowShippingModal()}
                   >
-                    Mua hàng
+                    Buy now
                   </Button>
                 </div>
               </Col>

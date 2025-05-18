@@ -71,7 +71,7 @@ const ModalShippingInfo = ({
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Cập nhật thông tin giao hàng</Modal.Title>
+        <Modal.Title>Update shipping information</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>
@@ -90,7 +90,7 @@ const ModalShippingInfo = ({
                 name={field.name}
                 value={formData[field.name]}
                 onChange={handleChange}
-                placeholder={`Nhập ${field.label.toLowerCase()}`}
+                placeholder={`Input ${field.label.toLowerCase()}`}
               />
             </Form.Group>
           ))}

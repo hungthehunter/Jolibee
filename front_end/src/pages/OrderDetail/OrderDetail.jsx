@@ -70,31 +70,31 @@ const OrderDetail = () => {
       <section className="menu_section">
         <Container className="py-5">
           <Card className="p-4 shadow-sm">
-            <h3 className="mb-4 text-success">🎉 Chi tiết đơn hàng!</h3>
-            <h5 className="mb-3">📦 Chi tiết đơn hàng:</h5>
+            <h3 className="mb-4 text-success">🎉 Detail Cart!</h3>
+            <h5 className="mb-3">📦 More information about detail cart:</h5>
 
             <p>
-              <strong>Người nhận:</strong> {shippingAddress?.fullname}
+              <strong>Recipient:</strong> {shippingAddress?.fullname}
             </p>
             <p>
-              <strong>Địa chỉ:</strong> {shippingAddress?.address},{" "}
+              <strong>Address:</strong> {shippingAddress?.address},{" "}
               {shippingAddress?.city}, {shippingAddress?.country}
             </p>
             <p>
-              <strong>SĐT:</strong> {shippingAddress?.phone}
+              <strong>Phone Number:</strong> {shippingAddress?.phone}
             </p>
             <p>
-              <strong>Phương thức thanh toán:</strong> {paymentMethod}
+              <strong>Payment Method:</strong> {paymentMethod}
             </p>
             <p>
-              <strong>Phí vận chuyển:</strong>{" "}
+              <strong>Shipping fee:</strong>{" "}
               {shippingPrice.toLocaleString("en-US", {
                 style: "currency",
                 currency: "USD",
               })}
             </p>
             <p>
-              <strong>Trạng thái giao hàng:</strong>{" "}
+              <strong>Delivery status:</strong>{" "}
               {isDelivered ? (
                 <span className="text-success">Đã giao</span>
               ) : (
@@ -102,17 +102,17 @@ const OrderDetail = () => {
               )}
             </p>
             <p>
-              <strong>Trạng thái thanh toán:</strong>{" "}
+              <strong>Payment status</strong>{" "}
               {isPaid ? (
-                <span className="text-success">Đã thanh toán</span>
+                <span className="text-success">Paid</span>
               ) : (
-                <span className="text-danger">Chưa thanh toán</span>
+                <span className="text-danger">Not paid</span>
               )}
             </p>
 
             <hr />
 
-            <h5 className="mt-4">🛒 Sản phẩm đã mua:</h5>
+            <h5 className="mt-4">🛒 Purchased product:</h5>
             {orderItems?.map((item, idx) => {
               const originalPrice = item.price;
               const discount = item?.product?.discount || 0;
@@ -139,7 +139,7 @@ const OrderDetail = () => {
                     <Col md={6}>
                       <strong>{item?.name}</strong>
                       <div>
-                        Giá gốc:{" "}
+                        Original price:{" "}
                         <s>
                           {originalPrice.toLocaleString("en-US", {
                             style: "currency",
@@ -148,11 +148,11 @@ const OrderDetail = () => {
                         </s>
                       </div>
                       <div>
-                        Giảm giá:{" "}
+                        Discount price:{" "}
                         <span className="text-danger">{discount}%</span>
                       </div>
                       <div>
-                        Giá sau giảm:{" "}
+                        Price after discount:{" "}
                         <span className="text-success">
                           {discountedPrice.toLocaleString("en-US", {
                             style: "currency",
@@ -163,7 +163,7 @@ const OrderDetail = () => {
                     </Col>
                     <Col md={2}>SL: {item?.amount}</Col>
                     <Col md={2}>
-                      Tổng:{" "}
+                      Total:{" "}
                       <strong>
                         {totalItemPrice.toLocaleString("en-US", {
                           style: "currency",
@@ -177,7 +177,7 @@ const OrderDetail = () => {
             })}
 
             <h5 className="text-end mt-4">
-              Tổng tiền:{" "}
+              Total amount:{" "}
               <strong>
                 {totalPrice?.toLocaleString("en-US", {
                   style: "currency",
@@ -192,10 +192,10 @@ const OrderDetail = () => {
                 onClick={() => navigate("/my-order")}
                 style={{ marginRight: "15px" }}
               >
-                Về danh sách Order của bạn
+                Regarding your Order list
               </Button>
               <Button variant="primary" onClick={() => navigate("/menu")}>
-                Tiếp tục mua sắm
+                Continue shopping
               </Button>
             </div>
           </Card>

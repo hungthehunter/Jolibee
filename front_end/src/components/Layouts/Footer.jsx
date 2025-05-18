@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
@@ -90,7 +90,7 @@ function Footer() {
                 <ul className="list-unstyled text-center mb-0">
                   <li>
                     <Link to="/">
-                      © 2023 <span>CODE4EDUCATION</span>. All Rights Reserved
+                      © 2025 <span>NGUYENTHAIKHOI</span>. All Rights Reserved
                     </Link>
                   </li>
                   <li>

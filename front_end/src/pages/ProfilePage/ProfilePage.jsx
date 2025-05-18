@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, Col, Form, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent/ButtonComponent";
@@ -84,7 +84,7 @@ const ProfilePage = () => {
   return (
     <div className="profile">
       <div className="container mt-5">
-        <h5 style={{ color: "yellow" }}>Thông tin người dùng</h5>
+        <h5 style={{ color: "yellow" }}>Detail User Information</h5>
         <Card className="p-4 shadow-sm">
           <Form>
             {/* Name */}
@@ -114,7 +114,7 @@ const ProfilePage = () => {
                     borderRadius: "4px",
                     padding: "6px",
                   }}
-                  textButton="Cập nhật"
+                  textButton="Update"
                 />
               </Col>
             </Form.Group>
@@ -146,7 +146,7 @@ const ProfilePage = () => {
                     borderRadius: "4px",
                     padding: "6px",
                   }}
-                  textButton="Cập nhật"
+                  textButton="Update"
                 />
               </Col>
             </Form.Group>
@@ -178,7 +178,7 @@ const ProfilePage = () => {
                     borderRadius: "4px",
                     padding: "6px",
                   }}
-                  textButton="Cập nhật"
+                  textButton="Update"
                 />
               </Col>
             </Form.Group>
@@ -210,7 +210,7 @@ const ProfilePage = () => {
                     borderRadius: "4px",
                     padding: "6px",
                   }}
-                  textButton="Cập nhật"
+                  textButton="Update"
                 />
               </Col>
             </Form.Group>
@@ -254,7 +254,7 @@ const ProfilePage = () => {
                     borderRadius: "4px",
                     padding: "6px",
                   }}
-                  textButton="Cập nhật"
+                  textButton="Update"
                 />
               </Col>
             </Form.Group>

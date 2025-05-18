@@ -31,7 +31,7 @@ const ShippingAndPaymentOptions = ({
 
   return (
     <div className="p-3 mt-3 border rounded bg-blue-50">
-      <h5 className="mb-2 font-semibold">Phương thức giao hàng</h5>
+      <h5 className="mb-2 font-semibold">Shipping method</h5>
 
       <label className="flex flex-col mt-2">
         <div className="flex items-center gap-2">
@@ -44,7 +44,7 @@ const ShippingAndPaymentOptions = ({
           />
           <span className="font-bold text-orange-500">{orderContant.delivery.gojeck}</span>
         </div>
-        <span className="ml-6 text-sm text-gray-600">Giao hàng tiết kiệm</span>
+        <span className="ml-6 text-sm text-gray-600">Economical Delivery</span>
       </label>
 
       <label className="flex flex-col mt-2">
@@ -58,7 +58,7 @@ const ShippingAndPaymentOptions = ({
           />
           <span className="font-bold text-blue-600">{orderContant.delivery.fast}</span>
         </div>
-        <span className="ml-6 text-sm text-gray-600">Giao hàng nhanh</span>
+        <span className="ml-6 text-sm text-gray-600">Fast Delivery</span>
       </label>
 
       {/* Phần mới: ăn tại bàn */}
@@ -73,18 +73,18 @@ const ShippingAndPaymentOptions = ({
           />
           <span className="font-bold text-green-600">{orderContant.delivery.eatin}</span>
         </div>
-        <span className="ml-6 text-sm text-gray-600">Gọi món tại chỗ (quét QR)</span>
+        <span className="ml-6 text-sm text-gray-600">Order on site (scan QR)</span>
       </label>
 
       {shippingMethod === "EAT_IN" && (
         <div className="mt-2 ml-6">
-          <label className="block mb-1 font-medium">Số bàn:</label>
+          <label className="block mb-1 font-medium">Table number:</label>
           <input
             type="number"
             className="p-2 border rounded"
             value={tableNumber}
             onChange={(e) => setTableNumber(e.target.value)}
-            placeholder="Nhập số bàn"
+            placeholder="Enter table number"
             required
           />
           {/* Nếu đã nhập số bàn thì hiện QR luôn */}
@@ -96,7 +96,7 @@ const ShippingAndPaymentOptions = ({
         </div>
       )}
 
-      <h5 className="mt-4 mb-2 font-semibold">Phương thức thanh toán</h5>
+      <h5 className="mt-4 mb-2 font-semibold">Payment method</h5>
 
       <label className="block mb-2">
         <input
@@ -106,7 +106,7 @@ const ShippingAndPaymentOptions = ({
           checked={paymentMethod === "CASH"}
           onChange={() => setPaymentMethod("CASH")}
         />
-        <span className="ml-2">Thanh toán tiền mặt khi nhận hàng</span>
+        <span className="ml-2">Cash on delivery</span>
       </label>
 
       <label className="block mb-2">
@@ -117,7 +117,7 @@ const ShippingAndPaymentOptions = ({
           checked={paymentMethod === "PAYPAL"}
           onChange={() => setPaymentMethod("PAYPAL")}
         />
-        <span className="ml-2">Thanh toán qua PayPal</span>
+        <span className="ml-2">Cash on PayPal</span>
       </label>
 
       {paymentMethod === "PAYPAL" && (

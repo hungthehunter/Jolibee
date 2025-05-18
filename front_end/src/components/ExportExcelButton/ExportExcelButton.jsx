@@ -1,5 +1,4 @@
 import ExcelJS from "exceljs";
-import React from "react";
 import { Button } from "react-bootstrap";
 
 const ExportExcelButton = ({
@@ -91,7 +90,7 @@ const ExportExcelButton = ({
 
   return (
     <Button onClick={handleExportExcel} className="mb-3">
-      Xuất ra Excel
+      Export Excel
     </Button>
   );
 };

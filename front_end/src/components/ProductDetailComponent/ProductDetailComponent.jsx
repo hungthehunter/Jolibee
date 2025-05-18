@@ -55,8 +55,6 @@ function ProductDetailComponent({ product, show, onHide }) {
     }
   };
 
-
-
   const handleAddOrderProduct = () => {
     if (!user?.id) {
       Message.toastError("Vui lòng đăng nhập trước khi thêm vào giỏ hàng");
@@ -102,6 +100,8 @@ function ProductDetailComponent({ product, show, onHide }) {
             <img
               src={product.image}
               alt={product.name}
+              fluid
+              rounded
               className="modal-image"
             />
           </Col>

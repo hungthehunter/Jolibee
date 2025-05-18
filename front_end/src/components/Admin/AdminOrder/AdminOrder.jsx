@@ -82,29 +82,24 @@ const AdminOrder = () => {
     mutationFn: ({ id, formData, access_token }) =>
       OrderService.updateOrder(id, formData, access_token),
     onSuccess: () => {
-      toastSuccess("Cập nhật đơn hàng thành công!");
+      toastSuccess("update order successfully!");
       setIsShowDrawer(false);
     },
     onError: (error) =>
-      toastError("Cập nhật đơn hàng thất bại!", error.message),
+      toastError("update order failed!", error.message),
     onSettled: () => queryClient.invalidateQueries({ queryKey: ["orders"] }),
   });
 
   const mutationDelete = useMutation({
     mutationFn: ({ id, access_token, orderItems }) => {
-      console.log("Deleting order with data:", {
-        id,
-        access_token,
-        orderItems,
-      });
       return OrderService.cancelOrder(id, access_token, orderItems);
     },
     onSuccess: () => {
-      toastSuccess("Xoá đơn hàng thành công!");
+      toastSuccess("Delete order success!");
       setShowDeleteModal(false);
       queryClient.invalidateQueries({ queryKey: ["orders"] });
     },
-    onError: () => toastError("Xoá đơn hàng thất bại!"),
+    onError: () => toastError("failed to delete order!"),
   });
 
   const handleNumericFilter = (field) => (filter) => {
