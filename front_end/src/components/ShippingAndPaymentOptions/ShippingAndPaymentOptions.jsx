@@ -49,6 +49,9 @@ const ShippingAndPaymentOptions = ({
       };
 
       localStorage.setItem(key, JSON.stringify({ user, order: orderData }));
+      console.log(`Order data saved for table ${tableNumber}:`, orderData);
+      console.log(`Order data saved in localStorage with key: ${key}`);
+      console.log(`Order data saved in localStorage:`, user);
     }
   }, [tableNumber, shippingMethod, user, order, paymentMethod]);
 
