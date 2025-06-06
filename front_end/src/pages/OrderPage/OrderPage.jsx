@@ -67,6 +67,11 @@ const handleShowShippingModal = () => {
     onSuccess: (data) => {
       if (data) {
         Message.toastSuccess("Đặt hàng thành công");
+const params = new URLSearchParams(window.location.search);
+    const table = params.get("table");
+    if (table) {
+      localStorage.removeItem(`order_data_table_${table}`);
+    }
 dispatch(clearOrder())
         navigate("/order-success", { state: { orderData: data } });
       } else {
@@ -162,6 +167,15 @@ const handleAddOrder = (shippingInfo) => {
     isPaid: shippingInfo?.isPaid || false,
   };
 
+// Lưu thông tin đơn hàng vào localStorage
+const params = new URLSearchParams(window.location.search);
+  const table = params.get("table");
+  if (table) {
+    const key = `order_data_table_${table}`;
+    localStorage.setItem(key, JSON.stringify({ user, order: orderData }));
+  }
+
+
   mutationAddOrder.mutate({ data: orderData, access_token });
 };
 
@@ -178,6 +192,18 @@ const handleAddOrder = (shippingInfo) => {
     if (user?.id && user?.access_token) {
       handleGetDetailUser(user.id, user.access_token);
     }
+
+const params = new URLSearchParams(location.search);
+  const table = params.get("table");
+  if (table) {
+    const key = `order_data_table_${table}`;
+    const storedData = localStorage.getItem(key);
+    if (storedData) {
+      const { user, order } = JSON.parse(storedData);
+      dispatch(updateUser(user));
+
+    }
+  }
     return () => {
       isMounted.current = false;
     };

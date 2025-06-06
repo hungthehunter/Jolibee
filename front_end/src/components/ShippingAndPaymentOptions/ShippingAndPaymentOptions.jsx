@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import PayPalComponent from "../../components/PaypalComponent/PaypalComponent";
-import { orderContant } from "../../contant";
+import orderContant from "../../constants/orderContant";
 const ShippingAndPaymentOptions = ({
   shippingMethod,
   setShippingMethod,
