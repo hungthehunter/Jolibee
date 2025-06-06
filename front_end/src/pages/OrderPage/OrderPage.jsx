@@ -17,7 +17,7 @@ import {
   Tooltip,
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import * as Message from "../../components/MessageComponent/MessageComponent";
 import ModalShippingInfo from "../../components/ModalComponent/ModalShippingInfo/ModalShippingInfo";
 import ShippingProgressBar from "../../components/ShippingProgressBar/ShippingProgressBar";
@@ -37,6 +37,7 @@ import * as UserService from "../../services/UserService";
 import "../../styles/MenuStyle.css";
 import { OrderContext } from "../../utils";
 const OrderPage = () => {
+  const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const order = useSelector((state) => state.order);
