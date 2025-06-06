@@ -175,6 +175,9 @@ const table = params.get("table");
 if (table) {
   const key = `order_data_table_${table}`;
   localStorage.setItem(key, JSON.stringify({ user, order: orderData }));
+  console.log(`Order data saved to localStorage with key: ${key}`);
+  console.log("Order data:", orderData);
+  console.log("User data:", user);
 }
   mutationAddOrder.mutate({ data: orderData, access_token });
 };

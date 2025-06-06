@@ -1,6 +1,5 @@
 import { QRCodeSVG } from "qrcode.react";
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import PayPalComponent from "../../components/PaypalComponent/PaypalComponent";
 import { orderConstant } from "../../utils";
@@ -15,8 +14,7 @@ const ShippingAndPaymentOptions = ({
   tableNumber,
   setTableNumber,
 }) => {
-  const order = useSelector((state) => state.order);
-  const user = useSelector((state) => state.user);
+
 const location = useLocation();
 const generateTableUrl = (tableNumber) => {
 
