@@ -15,8 +15,6 @@ const ShippingAndPaymentOptions = ({
 }) => {
 
   const location = useLocation();
-  const order = useSelector((state) => state.order);
-  const user = useSelector((state) => state.user);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
