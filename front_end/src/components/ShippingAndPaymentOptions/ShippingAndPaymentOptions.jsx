@@ -23,13 +23,18 @@ const generateTableUrl = (tableNumber) => {
 
 
   useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const table = params.get('table');
-    if (table) {
-      setShippingMethod("EAT_IN");
-      setTableNumber(table);
-    }
-  }, [location, setShippingMethod]);
+  const params = new URLSearchParams(location.search);
+  const table = params.get("table");
+
+  if (table && user && orderData) {
+    const key = `order_data_table_${table}`;
+    localStorage.setItem(key, JSON.stringify({ user, order: orderData }));
+    console.log(`Order data saved to localStorage with key: ${key}`);
+    console.log("Order data:", orderData);
+    console.log("User data:", user);
+  }
+}, [location, user, orderData]);
+
 
   return (
     <div className="p-3 mt-3 border rounded bg-blue-50">
