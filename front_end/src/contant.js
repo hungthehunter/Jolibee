@@ -1,5 +1,5 @@
 // contant.js
-export const orderContant = {
+export const orderContent = {
     delivery: {
       fast: 'FAST',
       gojeck: 'GO_JEK',
