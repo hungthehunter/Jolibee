@@ -18,7 +18,8 @@ const persistConfig = {
   key: 'root',
   version: 1,
   storage,
-  blacklist: ['product','user']
+  blacklist: ['product','user'],
+  whitelist: ['user', 'order'], // các reducer cần lưu
 }
 
 const rootReducer = combineReducers({

@@ -18,9 +18,6 @@ const ShippingAndPaymentOptions = ({
   const order = useSelector((state) => state.order);
   const user = useSelector((state) => state.user);
 
-console.log("ShippingAndPaymentOptions - order:", order);
-console.log("ShippingAndPaymentOptions - user:", user);
-
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const table = params.get('table');
