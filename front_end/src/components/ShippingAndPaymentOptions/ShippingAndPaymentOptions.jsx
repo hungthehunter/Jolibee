@@ -2,7 +2,7 @@ import { QRCodeSVG } from "qrcode.react";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import PayPalComponent from "../../components/PaypalComponent/PaypalComponent";
-import { orderConstant } from "../../constant.js";
+import { orderConstant } from "../../constant";
 
 const ShippingAndPaymentOptions = ({
   shippingMethod,
