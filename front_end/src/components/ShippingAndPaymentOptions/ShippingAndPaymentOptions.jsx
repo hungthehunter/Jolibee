@@ -19,9 +19,8 @@ const ShippingAndPaymentOptions = ({
   const user = useSelector((state) => state.user);
 const location = useLocation();
 const generateTableUrl = (tableNumber) => {
-  const userStr = encodeURIComponent(JSON.stringify(user));
-  const orderStr = encodeURIComponent(JSON.stringify(order));
-  return `${window.location.origin}/order?table=${tableNumber}&user=${userStr}&order=${orderStr}`;
+
+  return `${window.location.origin}/order?table=${tableNumber}`;
 };
 
 
