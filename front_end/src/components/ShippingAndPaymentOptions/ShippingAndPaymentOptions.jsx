@@ -26,11 +26,11 @@ const generateTableUrl = (tableNumber) => {
   const params = new URLSearchParams(location.search);
   const table = params.get("table");
 
-  if (table && user && orderData) {
+  if (table && user && order) {
     const key = `order_data_table_${table}`;
     localStorage.setItem(key, JSON.stringify({ user, order: order }));
   }
-}, [location, user, orderData]);
+}, [location, user, order]);
 
 
   return (
