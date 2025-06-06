@@ -2,7 +2,8 @@ import { QRCodeSVG } from "qrcode.react";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import PayPalComponent from "../../components/PaypalComponent/PaypalComponent";
-import { orderContent } from "../../contant/orderContent";
+import { orderConstant } from "../../constant";
+
 const ShippingAndPaymentOptions = ({
   shippingMethod,
   setShippingMethod,
@@ -41,7 +42,7 @@ const generateTableUrl = (tableNumber) => {
             checked={shippingMethod === "GO_JEK"}
             onChange={() => setShippingMethod("GO_JEK")}
           />
-          <span className="font-bold text-orange-500">{orderContent.delivery.gojeck}</span>
+          <span className="font-bold text-orange-500">{orderConstant.delivery.gojeck}</span>
         </div>
         <span className="ml-6 text-sm text-gray-600">Economical Delivery</span>
       </label>
@@ -55,7 +56,7 @@ const generateTableUrl = (tableNumber) => {
             checked={shippingMethod === "FAST"}
             onChange={() => setShippingMethod("FAST")}
           />
-          <span className="font-bold text-blue-600">{orderContent.delivery.fast}</span>
+          <span className="font-bold text-blue-600">{orderConstant.delivery.fast}</span>
         </div>
         <span className="ml-6 text-sm text-gray-600">Fast Delivery</span>
       </label>
@@ -70,7 +71,7 @@ const generateTableUrl = (tableNumber) => {
             checked={shippingMethod === "EAT_IN"}
             onChange={() => setShippingMethod("EAT_IN")}
           />
-          <span className="font-bold text-green-600">{orderContent.delivery.eatin}</span>
+          <span className="font-bold text-green-600">{orderConstant.delivery.eatin}</span>
         </div>
         <span className="ml-6 text-sm text-gray-600">Order on site (scan QR)</span>
       </label>
