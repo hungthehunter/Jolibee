@@ -29,6 +29,7 @@ import {
   removeSelectedOrders,
   selectAllOrders,
   selectedOrder,
+  setOrderFromLocalStorage,
 } from "../../redux/slices/orderSlice";
 import { updateUser } from "../../redux/slices/userSlice";
 import * as OrderService from "../../services/OrderService";
@@ -169,11 +170,12 @@ const handleAddOrder = (shippingInfo) => {
 
 // Lưu thông tin đơn hàng vào localStorage
 const params = new URLSearchParams(window.location.search);
-  const table = params.get("table");
-  if (table) {
-    const key = `order_data_table_${table}`;
-    localStorage.setItem(key, JSON.stringify({ user, order: orderData }));
-  }
+const table = params.get("table");
+if (table) {
+  const key = `order_data_table_${table}`;
+  localStorage.setItem(key, JSON.stringify({ user, order: orderData }));
+}
+
 
 
   mutationAddOrder.mutate({ data: orderData, access_token });
@@ -199,10 +201,10 @@ const params = new URLSearchParams(location.search);
     const key = `order_data_table_${table}`;
     const storedData = localStorage.getItem(key);
     if (storedData) {
-      const { user, order } = JSON.parse(storedData);
-      dispatch(updateUser(user));
-
-    }
+  const { user, order } = JSON.parse(storedData);
+  dispatch(updateUser(user));
+  dispatch(setOrderFromLocalStorage(order));
+}
   }
     return () => {
       isMounted.current = false;

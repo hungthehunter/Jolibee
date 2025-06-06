@@ -1,6 +1,5 @@
 import { QRCodeSVG } from "qrcode.react"; // chú ý: import default
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import PayPalComponent from "../../components/PaypalComponent/PaypalComponent";
 import orderContant from "../../constants/orderContant";
@@ -14,25 +13,11 @@ const ShippingAndPaymentOptions = ({
   setTableNumber,
 }) => {
 
-  const location = useLocation();
-  const order = useSelector((state) => state.order);
-  const user = useSelector((state) => state.user);
-
-const saveDataToLocalStorage = (tableNumber, user, order) => {
-  const key = `order_data_table_${tableNumber}`;
-  const data = { user, order };
-  localStorage.setItem(key, JSON.stringify(data));
-};
+const location = useLocation();
 
 const generateTableUrl = (tableNumber) => {
-  // Lưu user và order vào localStorage theo key tableNumber
-  saveDataToLocalStorage(tableNumber, user, order);
-
-  // Trả về URL chỉ chứa tableNumber
   return `${window.location.origin}/order?table=${tableNumber}`;
 };
-
-
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);

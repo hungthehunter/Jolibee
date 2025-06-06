@@ -72,6 +72,12 @@ export const orderSlice = createSlice({
         state.selectedItemOrders = state.orderItems.map((item) => item.product);
       }
     },
+    setOrderFromLocalStorage: (state, action) => {
+      return {
+        ...state,
+        ...action.payload, // phải là object dạng { orderItems: [...], ... }
+      };
+    },
 
     clearOrder: (state) => {
       return {
@@ -102,6 +108,7 @@ export const {
   selectAllOrders,
   selectedOrder,
   removeSelectedOrders,
+  setOrderFromLocalStorage,
 } = orderSlice.actions;
 
 export default orderSlice.reducer;
