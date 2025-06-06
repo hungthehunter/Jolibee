@@ -1,10 +1,9 @@
 import { QRCodeSVG } from "qrcode.react";
 import { useEffect } from "react";
+import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import PayPalComponent from "../../components/PaypalComponent/PaypalComponent";
 import { orderConstant } from "../../utils";
-
-import { useSelector } from "react-redux";
 const ShippingAndPaymentOptions = ({
   shippingMethod,
   setShippingMethod,
