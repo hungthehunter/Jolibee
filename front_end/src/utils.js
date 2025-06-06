@@ -50,3 +50,16 @@ import { createContext, useContext } from "react";
 export const OrderContext = createContext();
 
 export const useOrder = () => useContext(OrderContext);
+
+
+export const orderConstant = {
+    delivery: {
+      fast: 'FAST',
+      gojeck: 'GO_JEK',
+      eatin: 'EAT_IN', 
+    },
+    payment: {
+      fast: 'FAST',
+      gojeck: 'GO_JEK'
+    }
+  };
