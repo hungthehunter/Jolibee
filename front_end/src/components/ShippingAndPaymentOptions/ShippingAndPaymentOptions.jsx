@@ -15,6 +15,24 @@ const ShippingAndPaymentOptions = ({
 }) => {
 
   const location = useLocation();
+  const order = useSelector((state) => state.order);
+  const user = useSelector((state) => state.user);
+
+const saveDataToLocalStorage = (tableNumber, user, order) => {
+  const key = `order_data_table_${tableNumber}`;
+  const data = { user, order };
+  localStorage.setItem(key, JSON.stringify(data));
+};
+
+const generateTableUrl = (tableNumber) => {
+  // Lưu user và order vào localStorage theo key tableNumber
+  saveDataToLocalStorage(tableNumber, user, order);
+
+  // Trả về URL chỉ chứa tableNumber
+  return `${window.location.origin}/order?table=${tableNumber}`;
+};
+
+
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -24,10 +42,6 @@ const ShippingAndPaymentOptions = ({
       setTableNumber(table);
     }
   }, [location, setShippingMethod]);
-
-  const generateTableUrl = (tableNumber) => {
-    return `${window.location.origin}/order?table=${tableNumber}`;
-  };
 
   return (
     <div className="p-3 mt-3 border rounded bg-blue-50">
