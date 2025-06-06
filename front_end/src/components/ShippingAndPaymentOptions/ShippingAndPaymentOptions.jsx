@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 import PayPalComponent from "../../components/PaypalComponent/PaypalComponent";
 import { orderConstant } from "../../constant";
 
+
 const ShippingAndPaymentOptions = ({
   shippingMethod,
   setShippingMethod,
