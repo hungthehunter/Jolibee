@@ -1,6 +1,7 @@
 import { QRCodeSVG } from "qrcode.react";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 import PayPalComponent from "../../components/PaypalComponent/PaypalComponent";
 import { orderConstant } from "../../utils";
 
@@ -14,38 +15,24 @@ const ShippingAndPaymentOptions = ({
   tableNumber,
   setTableNumber,
 }) => {
-
-const user = useSelector((state) => state.user);
-const order = useSelector((state) => state.order);
+  const order = useSelector((state) => state.order);
+  const user = useSelector((state) => state.user);
+const location = useLocation();
 const generateTableUrl = (tableNumber) => {
-  return `${window.location.origin}/order?table=${tableNumber}`;
+  const userStr = encodeURIComponent(JSON.stringify(user));
+  const orderStr = encodeURIComponent(JSON.stringify(order));
+  return `${window.location.origin}/order?table=${tableNumber}&user=${userStr}&order=${orderStr}`;
 };
 
+
   useEffect(() => {
-  if (shippingMethod === "EAT_IN" && tableNumber && user?.id && order?.orderItems?.length > 0) {
-    const key = `order_data_table_${tableNumber}`;
-    const orderData = {
-      orderItems: order.orderItems,
-      shippingAddress: {
-        fullname: user.name,
-        address: user.address,
-        city: user.city,
-        country: "Việt Nam",
-        phone: user.phone,
-      },
-      paymentMethod,
-      itemPrice: order.itemPrice || 0,
-      shippingPrice: order.shippingPrice || 0,
-      taxPrice: order.taxPrice || 0,
-      totalPrice: order.totalPrice || 0,
-      user: user.id,
-      isPaid: false,
-    };
-
-    localStorage.setItem(key, JSON.stringify({ user, order: orderData }));
-  }
-}, [tableNumber, shippingMethod, user, order, paymentMethod]);
-
+    const params = new URLSearchParams(location.search);
+    const table = params.get('table');
+    if (table) {
+      setShippingMethod("EAT_IN");
+      setTableNumber(table);
+    }
+  }, [location, setShippingMethod]);
 
   return (
     <div className="p-3 mt-3 border rounded bg-blue-50">

@@ -176,9 +176,6 @@ if (table) {
   const key = `order_data_table_${table}`;
   localStorage.setItem(key, JSON.stringify({ user, order: orderData }));
 }
-
-
-
   mutationAddOrder.mutate({ data: orderData, access_token });
 };
 
